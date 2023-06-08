@@ -1,0 +1,62 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-accordion>
+      <mat-expansion-panel class="mat-elevation-z0">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Seccion de ABMs</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-nav-list>
+          <a mat-list-item routerLink="/main/crud/vessel">Elecciones</a>
+          <a mat-list-item routerLink="/main/crud/launch">Compañeros</a>
+          <a mat-list-item routerLink="/main/crud/vessel">Escuelas</a>
+          <a mat-list-item routerLink="/main/crud/port">Mesas Electorales</a>
+          <a mat-list-item routerLink="/main/crud/agency">Fiscales de Mesas</a>
+          <a mat-list-item routerLink="/main/crud/agency">Fiscales Generales</a>
+
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+    </mat-accordion>
+    <mat-accordion class="app-nav-accordion">
+      <mat-nav-list>
+        <h3 matSubheader>Section One</h3>
+        <a mat-list-item>Item Two</a>
+      </mat-nav-list>
+      <mat-expansion-panel class="mat-elevation-z0">
+        <mat-expansion-panel-header>
+            <mat-panel-title>Section Two</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+            <a mat-list-item>Item Three</a>
+            <a mat-list-item>Item Four</a>
+        </mat-nav-list>
+    </mat-expansion-panel>
+    </mat-accordion>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span class="example-spacer"></span>
+      <span>Elecciones 2023</span>
+
+
+
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+
+    <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>
