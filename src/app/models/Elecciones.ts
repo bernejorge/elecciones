@@ -5,13 +5,12 @@ export class Eleccion extends BaseEntity {
       return "elecciones";
   }
 
-  nombre: string;
-  fecha: Date;
+  nombre!: string;
+  fecha!: Date;
 
-  constructor(nombre: string, fecha: Date){
+  constructor(){
     super();
-    this.nombre = nombre;
-    this.fecha = fecha;
+
   }
   override get endPoint(): string {
     return "elecciones";

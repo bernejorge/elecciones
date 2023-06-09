@@ -10,7 +10,8 @@ import { DashBoardComponent } from './dash-board.component';
 @NgModule({
   declarations: [
     SidebarComponent,
-    DashBoardComponent
+    DashBoardComponent,
+
   ],
   imports: [
     CommonModule,

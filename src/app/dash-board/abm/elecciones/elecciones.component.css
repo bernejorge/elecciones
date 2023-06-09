@@ -1,0 +1,12 @@
+/* Estilos para el fondo del modal */
+.custom-modal-background {
+  background-color: #1a237e;
+  background-image: linear-gradient(to bottom, #1a237e, #3949ab);
+  /* Otros estilos para personalizar el fondo */
+}
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+}
