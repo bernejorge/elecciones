@@ -9,4 +9,11 @@
   bottom: 20px;
   right: 20px;
   border-radius: 50%;
+  background-color: #4CAF50; /* Establece el color de fondo a un verde bonito */
+  color: white; /* Establece el color del texto a blanco */
 }
+.floating-button:hover {
+  background-color: #52e85a; /* Cambia el color de fondo al pasar el mouse por encima */
+}
+
+
