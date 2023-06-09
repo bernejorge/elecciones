@@ -8,10 +8,12 @@ import { ModalAltaComponent } from './elecciones/modal-alta/modal-alta.component
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CompanerosComponent } from './companeros/companeros.component';
 import { ModalCompaneroComponent } from './companeros/modal-alta/modal-alta.component';
+import { EscuelasComponent } from './escuelas/escuelas.component';
+import { ModalEscuelasComponent } from './escuelas/modal-escuelas/modal-escuelas.component';
 
 
 @NgModule({
-  declarations: [EleccionesComponent, ModalAltaComponent, CompanerosComponent, ModalCompaneroComponent],
+  declarations: [EleccionesComponent, ModalAltaComponent, CompanerosComponent, ModalCompaneroComponent, EscuelasComponent, ModalEscuelasComponent],
   imports: [
     CommonModule,
     AbmRoutingModule,
