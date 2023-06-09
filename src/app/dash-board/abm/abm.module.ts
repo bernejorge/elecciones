@@ -7,10 +7,11 @@ import { MaterialModule } from 'src/app/Shared/modules/material.module';
 import { ModalAltaComponent } from './elecciones/modal-alta/modal-alta.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CompanerosComponent } from './companeros/companeros.component';
+import { ModalCompaneroComponent } from './companeros/modal-alta/modal-alta.component';
 
 
 @NgModule({
-  declarations: [EleccionesComponent, ModalAltaComponent, CompanerosComponent],
+  declarations: [EleccionesComponent, ModalAltaComponent, CompanerosComponent, ModalCompaneroComponent],
   imports: [
     CommonModule,
     AbmRoutingModule,

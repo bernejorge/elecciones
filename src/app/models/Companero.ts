@@ -13,7 +13,7 @@ export class Companero extends BaseEntity{
   }
 
   override get endPoint(): string {
-    return "companero";
+    return "companeros";
   }
 
 }
