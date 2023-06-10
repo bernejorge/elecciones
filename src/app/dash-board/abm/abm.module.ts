@@ -10,10 +10,12 @@ import { CompanerosComponent } from './companeros/companeros.component';
 import { ModalCompaneroComponent } from './companeros/modal-alta/modal-alta.component';
 import { EscuelasComponent } from './escuelas/escuelas.component';
 import { ModalEscuelasComponent } from './escuelas/modal-escuelas/modal-escuelas.component';
+import { MesasComponent } from './mesas/mesas.component';
+import { MesasModalComponent } from './mesas/mesas-modal/mesas-modal.component';
 
 
 @NgModule({
-  declarations: [EleccionesComponent, ModalAltaComponent, CompanerosComponent, ModalCompaneroComponent, EscuelasComponent, ModalEscuelasComponent],
+  declarations: [EleccionesComponent, ModalAltaComponent, CompanerosComponent, ModalCompaneroComponent, EscuelasComponent, ModalEscuelasComponent, MesasComponent, MesasModalComponent],
   imports: [
     CommonModule,
     AbmRoutingModule,
