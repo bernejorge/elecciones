@@ -1,1 +1,53 @@
-<p>mesas works!</p>
+<!-- <button mat-button (click)="abrirModalAgregar()">Agregar</button> -->
+<button mat-fab color="primary" class="floating-button" (click)="abrirModalAgregar()">
+  <mat-icon>add</mat-icon>
+</button>
+
+<table mat-table [dataSource]="mesas" class="mat-elevation-z8">
+
+  <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="numeroMesa">
+    <th mat-header-cell *matHeaderCellDef> Numero de Mesa </th>
+    <td mat-cell *matCellDef="let element"> {{element.numeroMesa}} </td>
+  </ng-container>
+
+  <!-- escuela Column -->
+  <ng-container matColumnDef="escuela">
+    <th mat-header-cell *matHeaderCellDef> Escuela </th>
+    <td mat-cell *matCellDef="let element"> {{element.Escuela.nombre}} </td>
+  </ng-container>
+
+    <!-- eleccion Column -->
+    <ng-container matColumnDef="eleccion">
+      <th mat-header-cell *matHeaderCellDef> Eleccion </th>
+      <td mat-cell *matCellDef="let element"> {{element.Eleccion.nombre}} </td>
+    </ng-container>
+
+    <!-- cant votantes Column -->
+    <ng-container matColumnDef="cantidad_votantes">
+      <th mat-header-cell *matHeaderCellDef> Cant. Votantes </th>
+      <td mat-cell *matCellDef="let element"> {{element.cantidad_votantes}} </td>
+    </ng-container>
+
+ <!-- Acciones Column -->
+ <ng-container matColumnDef="acciones">
+  <th mat-header-cell *matHeaderCellDef> Acciones </th>
+  <td mat-cell *matCellDef="let element">
+    <button mat-icon-button color="primary" (click)="abrirModalActualizar(element)">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" (click)="borrarEleccion(element)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </td>
+</ng-container>
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

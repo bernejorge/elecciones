@@ -1,1 +1,37 @@
-<p>mesas-modal works!</p>
+<mat-dialog-content class="form-container">
+
+  <h2>{{ isUpdate ? 'Actualizar Mesa' : 'Agregar Mesa' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="saveMesa()">
+    <mat-form-field appearance="fill" class="input-field">
+      <input matInput placeholder="Nro de Mesa" formControlName="numeroMesa">
+      <mat-error *ngIf="form.controls['numeroMesa'].hasError('required')">El nrp de mesa es requeridos</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="input-field">
+      <input matInput placeholder="Cantidad Votantes" formControlName="cantidad_votantes">
+      <mat-error *ngIf="form.controls['cantidad_votantes'].hasError('required')">La Cantidad de votantes es requerida</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>Escuela</mat-label>
+      <mat-select formControlName="escuela_id" [(ngModel)]="form.value.escuela_id">
+        <mat-option *ngFor="let escuela of escuelas" [value]="escuela.id">{{ escuela.nombre }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.controls['escuela_id'].hasError('required')">La escuela es requerida</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>Eleccion</mat-label>
+      <mat-select formControlName="eleccion_id" [(ngModel)]="form.value.eleccion_id">
+        <mat-option *ngFor="let eleccion of elecciones" [value]="eleccion.id">{{ eleccion.nombre }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.controls['eleccion_id'].hasError('required')">La eleccion a la que pertenece es requerida</mat-error>
+    </mat-form-field>
+
+    <div class="button-container">
+      <button mat-raised-button class="btn-guardar" type="submit" [disabled]="form.invalid">Guardar</button>
+      <button mat-button class="btn-cerrar" (click)="closeModal($event)">Cerrar</button>
+    </div>
+  </form>
+</mat-dialog-content>
