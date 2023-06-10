@@ -1,0 +1,19 @@
+/* Estilos para el fondo del modal */
+.custom-modal-background {
+  background-color: #1a237e;
+  background-image: linear-gradient(to bottom, #1a237e, #3949ab);
+  /* Otros estilos para personalizar el fondo */
+}
+.floating-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  background-color: #4CAF50; /* Establece el color de fondo a un verde bonito */
+  color: white; /* Establece el color del texto a blanco */
+}
+.floating-button:hover {
+  background-color: #52e85a; /* Cambia el color de fondo al pasar el mouse por encima */
+}
+
+

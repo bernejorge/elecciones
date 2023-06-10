@@ -1,1 +1,18 @@
-<p>modal-escuelas works!</p>
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="saveEscuela()">
+    <mat-form-field appearance="fill" class="input-field">
+      <input matInput placeholder="Nombres" formControlName="nombre">
+      <mat-error *ngIf="form.controls['nombre'].hasError('required')">Los nombres son requeridos</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="input-field">
+      <input matInput placeholder="Dirección" formControlName="direccion">
+      <mat-error *ngIf="form.controls['direccion'].hasError('required')">La dirección es requerida</mat-error>
+    </mat-form-field>
+
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Guardar</button>
+      <button mat-button (click)="closeModal($event)">Cerrar</button>
+    </div>
+  </form>
+</mat-dialog-content>
