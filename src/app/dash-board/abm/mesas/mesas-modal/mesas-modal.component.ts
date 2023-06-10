@@ -64,10 +64,10 @@ export class MesasModalComponent implements OnInit {
     if (this.form.valid) {
       if (this.mesa) {
         //si estoy actualizando
-        let e = Object.assign(new Escuela(), this.form.value);
-        e.id = this.mesa.id;
-        this.abmService.update(e).subscribe(
-          (res:Escuela)=> {
+        let m = Object.assign(new MesasElectoral(), this.form.value);
+        m.id = this.mesa.id;
+        this.abmService.update(m).subscribe(
+          (res:MesasElectoral)=> {
             Swal.fire({
               icon: 'success',
               title: 'Actualización exitosa',

@@ -8,10 +8,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppConfigService, appConfigServiceInitializer } from './app-setting/app-config.service';
 import { API_URLS } from './app-setting/app-config.token';
 import { HttpClientModule } from '@angular/common/http';
+import { LayoutComponent } from './setup-eleccion/layout/layout.component';
+import { SidebarSetupComponent } from './setup-eleccion/sidebar-setup/sidebar-setup.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LayoutComponent,
+    SidebarSetupComponent
   ],
   imports: [
     BrowserModule,
