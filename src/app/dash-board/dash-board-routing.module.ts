@@ -6,10 +6,11 @@ const routes: Routes = [
   {
     path: '', component: DashBoardComponent,
       children: [
-        {path: 'abm', loadChildren: () => import('./abm/abm.module').then((m) => m.AbmModule) }
-      ],
+        {path: 'abm', loadChildren: () => import('./abm/abm.module').then((m) => m.AbmModule) },
 
+      ],
   }
+
 ];
 
 @NgModule({

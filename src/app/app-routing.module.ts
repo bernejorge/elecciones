@@ -4,7 +4,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: 'dash', loadChildren: ()=> import('./dash-board/dash-board.module').then(m => m.DashBoardModule) },
-
+  {
+    path: 'setup-elecccion',
+    loadChildren:()=>import('./setup-eleccion/setup-eleccion.module').then((m) => m.SetupEleccionModule)
+  }
 ];
 
 @NgModule({

@@ -24,6 +24,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [],
+  providers: [
+
+  ],
   exports:[
     MatToolbarModule,
     MatIconModule,

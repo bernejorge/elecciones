@@ -1,4 +1,4 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container id="ja" class="sidenav-container sidebar-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
@@ -11,14 +11,32 @@
         </mat-expansion-panel-header>
 
         <mat-nav-list>
-          <a mat-list-item routerLink="/dash/abm/elecciones">Elecciones</a>
-          <a mat-list-item routerLink="/dash/abm/companeros">Compañeros</a>
-          <a mat-list-item routerLink="/dash/abm/escuelas">Escuelas</a>
-          <a mat-list-item routerLink="/dash/abm/mesas">Mesas Electorales</a>
-          <a mat-list-item routerLink="/main/crud/agency">Fiscales de Mesas</a>
-          <a mat-list-item routerLink="/main/crud/agency">Fiscales Generales</a>
-
+          <a mat-list-item
+            routerLink="/dash/abm/elecciones"
+            (click)="selectItem('elecciones')"
+            [ngClass]="{'active': selectedItem === 'elecciones'}">Elecciones</a>
+          <a mat-list-item
+            routerLink="/dash/abm/companeros"
+            (click)="selectItem('companeros')"
+            [ngClass]="{'active': selectedItem === 'companeros'}">Compañeros</a>
+          <a mat-list-item
+            routerLink="/dash/abm/escuelas"
+            (click)="selectItem('escuelas')"
+            [ngClass]="{'active': selectedItem === 'escuelas'}">Escuelas</a>
+          <a mat-list-item
+            routerLink="/dash/abm/mesas"
+            (click)="selectItem('mesas')"
+            [ngClass]="{'active': selectedItem === 'mesas'}">Mesas Electorales</a>
+          <a mat-list-item
+            routerLink="/main/crud/agency"
+            (click)="selectItem('fiscalesMesas')"
+            [ngClass]="{'active': selectedItem === 'fiscalesMesas'}">Fiscales de Mesas</a>
+          <a mat-list-item
+            routerLink="/main/crud/agency"
+            (click)="selectItem('fiscalesGenerales')"
+            [ngClass]="{'active': selectedItem === 'fiscalesGenerales'}">Fiscales Generales</a>
         </mat-nav-list>
+
       </mat-expansion-panel>
 
     </mat-accordion>

@@ -10,6 +10,7 @@ const routes: Routes = [
   {path: 'companeros', component:CompanerosComponent},
   {path: 'escuelas', component: EscuelasComponent},
   {path: 'mesas', component: MesasComponent},
+  // { path: 'setup-elecciones', loadChildren: () => import('./../setup-eleccion/setup-eleccion.module').then(m => m.SetupEleccionModule) },
 ];
 
 @NgModule({

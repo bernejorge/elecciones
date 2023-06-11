@@ -6,6 +6,8 @@ import { CrudService } from 'src/app/Shared/services/crud.service';
 import { Eleccion } from 'src/app/models/Elecciones';
 import { ModalAltaComponent } from './modal-alta/modal-alta.component';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
+import { SetupService } from 'src/app/Shared/services/setup.service';
 
 export interface PeriodicElement {
   name: string;
@@ -37,7 +39,11 @@ export class EleccionesComponent implements OnInit {
   dataSource = ELEMENT_DATA;
   elecciones: Eleccion[] = [];
 
-  constructor(private abmService: CrudService, public dialog: MatDialog) {
+  constructor(
+    private abmService: CrudService,
+    public dialog: MatDialog,
+    private router: Router,
+    private setupService: SetupService) {
 
   }
   ngOnInit(): void {
@@ -128,5 +134,9 @@ export class EleccionesComponent implements OnInit {
     });
   }
 
+  redirigirSetupEleccion(e: Eleccion) {
+    this.setupService.seleccionarEleccion(e);
+    this.router.navigate(['/setup-elecccion']);
+  }
 
 }
