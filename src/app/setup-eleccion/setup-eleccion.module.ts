@@ -7,6 +7,9 @@ import { MaterialModule } from 'src/app/Shared/modules/material.module';
 import { SidebarSetupComponent } from './sidebar-setup/sidebar-setup.component';
 import { FiscalesMesasComponent } from './fiscales-mesas/fiscales-mesas.component';
 import { FiscalesGeneralesComponent } from './fiscales-generales/fiscales-generales.component';
+import { FiscalMesaModalComponent } from './fiscales-mesas/fiscal-mesa-modal/fiscal-mesa-modal.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FiscalGeneralModalComponent } from './fiscales-generales/fiscal-general-modal/fiscal-general-modal.component';
 
 
 @NgModule({
@@ -14,12 +17,16 @@ import { FiscalesGeneralesComponent } from './fiscales-generales/fiscales-genera
     LayoutComponent,
     SidebarSetupComponent,
     FiscalesMesasComponent,
-    FiscalesGeneralesComponent
+    FiscalesGeneralesComponent,
+    FiscalMesaModalComponent,
+    FiscalGeneralModalComponent
   ],
   imports: [
     CommonModule,
     SetupEleccionRoutingModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
 
 })

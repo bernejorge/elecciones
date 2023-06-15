@@ -15,5 +15,8 @@ export class Eleccion extends BaseEntity {
   override get endPoint(): string {
     return "elecciones";
   }
+  override getFilterText(): string {
+    return `${this.nombre} ` ;
+  }
 
 }

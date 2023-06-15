@@ -46,7 +46,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatListModule,
     MatCardModule,
     MatIconModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatPaginatorModule
   ]
 })
 export class MaterialModule { }

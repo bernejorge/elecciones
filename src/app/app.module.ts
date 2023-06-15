@@ -8,11 +8,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppConfigService, appConfigServiceInitializer } from './app-setting/app-config.service';
 import { API_URLS } from './app-setting/app-config.token';
 import { HttpClientModule } from '@angular/common/http';
+import { SelectCompaneroModalComponent } from './Shared/components/select-companero-modal/select-companero-modal.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    SelectCompaneroModalComponent,
 
 
   ],
@@ -22,6 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     MaterialModule,
     HttpClientModule,
+    FormsModule
   ],
   providers: [
     AppConfigService,

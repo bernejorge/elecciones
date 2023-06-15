@@ -14,4 +14,8 @@ export class Escuela extends BaseEntity {
     return "escuelas";
   }
 
+  override getFilterText(): string {
+    return `${this.nombre}` ;
+  }
+
 }

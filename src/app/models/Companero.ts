@@ -1,6 +1,9 @@
 import { BaseEntity } from "./BaseEntity";
 
 export class Companero extends BaseEntity{
+  override getFilterText(): string {
+    return `${this.nombre} ${this.apellido} ${this.dni}` ;
+  }
 
   nombre!: string;
   apellido!: string;

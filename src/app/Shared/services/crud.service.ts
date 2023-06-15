@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
-import { Observable } from 'rxjs';
 import { API_URLS, AppSetings } from 'src/app/app-setting/app-config.token';
 import { BaseEntity } from 'src/app/models/BaseEntity';
 

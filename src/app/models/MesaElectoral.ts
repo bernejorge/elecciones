@@ -21,4 +21,8 @@ export class MesasElectoral extends BaseEntity{
     return "mesas";
   }
 
+  override getFilterText(): string {
+    return `${this.numeroMesa.toString()}` ;
+  }
+
 }

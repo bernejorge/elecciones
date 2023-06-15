@@ -1,0 +1,41 @@
+<mat-dialog-content class="form-container">
+  <h2>{{ isUpdate ? 'Actualizar Mesa' : 'Agregar Mesa' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="setFiscal()">
+    <div class="form-row">
+      <div class="form-column">
+        <mat-form-field appearance="fill" class="select-field">
+          <mat-label>Seleccionar escuela</mat-label>
+          <mat-select [(value)]="escuelaElegida">
+            <mat-option *ngFor="let escuela of escuelas" [value]="escuela">
+              {{ escuela.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-column">
+        <mat-form-field appearance="fill" class="select-field">
+          <mat-label>Mesa Electoral</mat-label>
+          <mat-select formControlName="mesa_id" [(ngModel)]="form.value.mesa_id">
+            <mat-option *ngFor="let mesa of mesasDeEscuela" [value]="mesa.id">{{ mesa.numeroMesa }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.controls['mesa_id'].hasError('required')">La escuela es requerida</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-form-field appearance="fill" class="input-field">
+      <input matInput placeholder="Compañero" [readonly]="true" [value]="companeroSeleccionado?.nombre">
+      <button mat-icon-button matSuffix (click)="openSelectCompaneroModal($event)">
+        <mat-icon>search</mat-icon>
+      </button>
+      <mat-error *ngIf="form.controls['companero_id'].hasError('required')">El compañero es requerido</mat-error>
+    </mat-form-field>
+
+    <div class="button-container">
+      <button mat-raised-button class="btn-guardar" type="submit" [disabled]="form.invalid">Guardar</button>
+      <button mat-button class="btn-cerrar" (click)="closeModal($event)">Cerrar</button>
+    </div>
+  </form>
+</mat-dialog-content>
