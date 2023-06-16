@@ -1,0 +1,15 @@
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="savePartido()">
+
+    <mat-form-field appearance="fill" class="input-field">
+      <input matInput placeholder="Nombre del Partido" formControlName="nombre">
+      <mat-error *ngIf="form.controls['nombre'].hasError('required')">Los nombres son requeridos</mat-error>
+    </mat-form-field>
+
+
+    <div class="button-container">
+      <button class="btn-guardar" mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Guardar</button>
+      <button class="btn-cerrar" (click)="closeModal($event)">Cerrar</button>
+    </div>
+  </form>
+</mat-dialog-content>

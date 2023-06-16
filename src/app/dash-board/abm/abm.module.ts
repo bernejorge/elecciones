@@ -14,6 +14,8 @@ import { MesasComponent } from './mesas/mesas.component';
 import { MesasModalComponent } from './mesas/mesas-modal/mesas-modal.component';
 import { CandidatosComponent } from './candidatos/candidatos.component';
 import { CandidatosModalComponent } from './candidatos/candidatos-modal/candidatos-modal.component';
+import { PartidosComponent } from './partidos/partidos.component';
+import { ModalPartidosComponent } from './partidos/modal-partidos/modal-partidos.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { CandidatosModalComponent } from './candidatos/candidatos-modal/candidat
     MesasModalComponent,
     CandidatosComponent,
     CandidatosModalComponent,
+    PartidosComponent,
+    ModalPartidosComponent,
   ],
   imports: [
     CommonModule,
