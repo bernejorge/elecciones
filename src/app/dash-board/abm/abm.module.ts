@@ -12,16 +12,28 @@ import { EscuelasComponent } from './escuelas/escuelas.component';
 import { ModalEscuelasComponent } from './escuelas/modal-escuelas/modal-escuelas.component';
 import { MesasComponent } from './mesas/mesas.component';
 import { MesasModalComponent } from './mesas/mesas-modal/mesas-modal.component';
-
+import { CandidatosComponent } from './candidatos/candidatos.component';
+import { CandidatosModalComponent } from './candidatos/candidatos-modal/candidatos-modal.component';
 
 @NgModule({
-  declarations: [EleccionesComponent, ModalAltaComponent, CompanerosComponent, ModalCompaneroComponent, EscuelasComponent, ModalEscuelasComponent, MesasComponent, MesasModalComponent],
+  declarations: [
+    EleccionesComponent,
+    ModalAltaComponent,
+    CompanerosComponent,
+    ModalCompaneroComponent,
+    EscuelasComponent,
+    ModalEscuelasComponent,
+    MesasComponent,
+    MesasModalComponent,
+    CandidatosComponent,
+    CandidatosModalComponent,
+  ],
   imports: [
     CommonModule,
     AbmRoutingModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+  ],
 })
-export class AbmModule { }
+export class AbmModule {}
