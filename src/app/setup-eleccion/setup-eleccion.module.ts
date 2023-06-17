@@ -10,6 +10,8 @@ import { FiscalesGeneralesComponent } from './fiscales-generales/fiscales-genera
 import { FiscalMesaModalComponent } from './fiscales-mesas/fiscal-mesa-modal/fiscal-mesa-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FiscalGeneralModalComponent } from './fiscales-generales/fiscal-general-modal/fiscal-general-modal.component';
+import { ListasElectoralesComponent } from './listas-electorales/listas-electorales.component';
+import { ModalListasComponent } from './listas-electorales/modal-listas/modal-listas.component';
 
 
 @NgModule({
@@ -19,7 +21,9 @@ import { FiscalGeneralModalComponent } from './fiscales-generales/fiscal-general
     FiscalesMesasComponent,
     FiscalesGeneralesComponent,
     FiscalMesaModalComponent,
-    FiscalGeneralModalComponent
+    FiscalGeneralModalComponent,
+    ListasElectoralesComponent,
+    ModalListasComponent
   ],
   imports: [
     CommonModule,
