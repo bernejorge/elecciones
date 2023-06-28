@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { MatTableModule } from '@angular/material/table';
@@ -8,6 +8,9 @@ import { ModalAltaComponent } from './modal-alta/modal-alta.component';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { SetupService } from 'src/app/Shared/services/setup.service';
+import { FunctionCallingService } from 'src/app/Shared/services/functionCalling.service';
+import { FunctionCall } from 'src/app/models/FunctionInterface';
+import { Subscription } from 'rxjs';
 
 export interface PeriodicElement {
   name: string;
@@ -16,38 +19,88 @@ export interface PeriodicElement {
   symbol: string;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
 
 @Component({
   selector: 'app-elecciones',
   templateUrl: './elecciones.component.html',
   styleUrls: ['./elecciones.component.css']
 })
-export class EleccionesComponent implements OnInit {
+export class EleccionesComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'fecha', 'acciones'];
-  dataSource = ELEMENT_DATA;
+  //dataSource = ELEMENT_DATA;
   elecciones: Eleccion[] = [];
+  private funciones: FunctionCall[];
+  private subscription!: Subscription;
 
   constructor(
     private abmService: CrudService,
     public dialog: MatDialog,
     private router: Router,
-    private setupService: SetupService) {
+    private setupService: SetupService,
+    private functionCallingService: FunctionCallingService,
+    private changeDetectorRef: ChangeDetectorRef) {
+      this.funciones = [
+        {
+          name: 'agregar_eleccion',
+          description: 'Da de alta una eleccion, abre la vista que contiene el formulario para dar de alta una eleccion en la base de datos',
+          parameters: {
+            type: "object",
+            properties: {
+              nombre: {
+                type: "string",
+                description: "El nombre con el que se registra la eleccion"
+              },
+              fecha: {
+                type: "string",
+                description: "La fecha de la eleccion en formato yyyy/MM/dd"
+              }
+            },
+            required: ["nombre"]
+          },
+        }
+      ];
+      this.functionCallingService.addFunctions(this.funciones);
 
+  }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.functionCallingService.removeFunctions(this.funciones);
   }
   ngOnInit(): void {
     this.loadData();
+    this.subscription = this.functionCallingService.functionReturned$.subscribe((data: string) => {
+      if (data.length > 0 && data.includes("name") && data.includes("arguments")) {
+        //obtener funcion
+        const responseObject = JSON.parse(data);
+
+        const { name, arguments: argumentsString } = responseObject; // Desestructuración para obtener name y arguments
+        let argumentsObject;
+
+        //obtener argumentos de la función
+        try {
+           argumentsObject = JSON.parse(argumentsString); // Convertir la cadena de texto de arguments a un objeto
+        } catch (error) {
+
+        }
+
+        // Obtener los parámetros individuales
+        const nombre = argumentsObject.nombre ? argumentsObject.nombre : "";
+        const fecha = argumentsObject.fecha ? argumentsObject.fecha : "";
+
+        // Verificar el nombre de la función y ejecutarla con los argumentos correspondientes
+        switch (responseObject.name) {
+          case 'agregar_eleccion':
+            this.abrirModalAgregar(nombre, fecha);
+            break;
+          default:
+            console.log('La función no está definida o no se proporcionó un nombre válido.');
+        }
+        console.log(data);
+
+      }
+
+
+    });
   }
 
   loadData(){
@@ -62,21 +115,29 @@ export class EleccionesComponent implements OnInit {
     );
   }
 
-  abrirModalAgregar(): void {
+  abrirModalAgregar(nombre?: string, fecha?: string): void {
+    let fechaEleccion: any = undefined;
+    if(fecha !== undefined && fecha.length > 0) {
+      if (this.isValidDate(fecha)){
+        fechaEleccion = new Date(fecha);
+      }
+    }
+
     const dialogRef = this.dialog.open(ModalAltaComponent, {
       data: {
-        eleccion: undefined
+        eleccion: undefined,
       },
-      width: '400px', // Especifica el ancho del modal
-      panelClass: 'custom-modal-background', // Aplica la clase personalizada al modal
-      // Otras opciones del modal...
+      width: '400px',
+      panelClass: 'custom-modal-background',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       console.log('El modal se cerró');
-      // Realizar acciones después de cerrar el modal, como llamar al servicio de ABM
       this.loadData();
     });
+
+    dialogRef.componentInstance.ngOnInit();
+
   }
   abrirModalActualizar(eleccion: Eleccion): void {
 
@@ -139,4 +200,13 @@ export class EleccionesComponent implements OnInit {
     this.router.navigate(['/setup-elecccion']);
   }
 
+  isValidDate(dateString: string): boolean {
+    const regEx = /^\d{4}\/\d{2}\/\d{2}$/;
+    if (!dateString.match(regEx)) {
+      return false; // El formato no coincide
+    }
+    const date = new Date(dateString);
+    const isValid = date instanceof Date && !isNaN(date.getTime());
+    return isValid;
+  }
 }

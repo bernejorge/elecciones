@@ -16,4 +16,5 @@
   background-color: #52e85a; /* Cambia el color de fondo al pasar el mouse por encima */
 }
 
+bs-datepicker-container, bs-daterangepicker-container { z-index: 2000; }
 

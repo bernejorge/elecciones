@@ -5,7 +5,7 @@ import { Escuela } from "./Escuela";
 
 export class FiscalGeneral extends BaseEntity{
   override get endPoint(): string {
-    throw new Error("Method not implemented.");
+    return "fiscalesgenerales";
   }
   override getFilterText(): string {
     throw new Error("Method not implemented.");

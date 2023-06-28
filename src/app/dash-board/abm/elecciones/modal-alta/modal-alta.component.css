@@ -12,3 +12,7 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.cdk-overlay-pane  {
+  z-index: 1555 !important;
+}

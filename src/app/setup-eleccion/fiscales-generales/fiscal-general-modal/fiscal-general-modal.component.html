@@ -1,1 +1,32 @@
-<p>fiscal-general-modal works!</p>
+<mat-dialog-content class="form-container">
+  <h2>{{ isUpdate ? 'Actualizar Fiscal General' : 'Agregar Fiscal General' }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="setFiscal()">
+    <div class="form-row">
+      <div class="form-column">
+        <mat-form-field appearance="fill" class="select-field">
+          <mat-label>Seleccionar escuela</mat-label>
+          <mat-select formControlName="escuela_id" [(ngModel)]="form.value.escuela_id">
+            <mat-option *ngFor="let escuela of escuelas" [value]="escuela.id">
+              {{ escuela.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <mat-form-field appearance="fill" class="input-field">
+      <input matInput placeholder="Compañero" [readonly]="true" [value]="companeroSeleccionado?.nombre">
+      <button mat-icon-button matSuffix (click)="openSelectCompaneroModal($event)">
+        <mat-icon>search</mat-icon>
+      </button>
+      <mat-error *ngIf="form.controls['companero_id'].hasError('required')">El compañero es requerido</mat-error>
+    </mat-form-field>
+
+    <div class="button-container">
+      <button mat-raised-button class="btn-guardar" type="submit" [disabled]="form.invalid">Guardar</button>
+      <button mat-button class="btn-cerrar" (click)="closeModal($event)">Cerrar</button>
+    </div>
+  </form>
+</mat-dialog-content>

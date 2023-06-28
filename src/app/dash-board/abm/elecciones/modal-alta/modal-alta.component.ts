@@ -1,5 +1,6 @@
-import { Component, Inject, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDatepicker } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CrudService } from 'src/app/Shared/services/crud.service';
 import { Eleccion } from 'src/app/models/Elecciones';
@@ -10,12 +11,14 @@ import Swal from 'sweetalert2';
   templateUrl: './modal-alta.component.html',
   styleUrls: ['./modal-alta.component.css']
 })
-export class ModalAltaComponent {
+export class ModalAltaComponent implements OnInit {
   @Input() eleccion: Eleccion | undefined; // Instancia de eleccion o undefined para indicar si es un update
   form!: FormGroup;
+  @ViewChild('picker') datePicker!: MatDatepicker<Date>;
 
   constructor(
     public dialogRef: MatDialogRef<ModalAltaComponent>,
+    private changeDetectorRef: ChangeDetectorRef,
     private formBuilder: FormBuilder,
     private abmService: CrudService,
     @Inject(MAT_DIALOG_DATA) public data: { eleccion: Eleccion | undefined }
@@ -37,8 +40,15 @@ export class ModalAltaComponent {
         fecha: this.eleccion.fecha
       });
     }
+    //this.changeDetectorRef.detectChanges();
+    setTimeout(() => {
+      this.changeDetectorRef.detectChanges();
+    }, 1000); // Esperar 1 segundo (1000 milisegundos) antes de realizar la detección de cambios
   }
 
+  openCalendar(){
+    this.changeDetectorRef.detectChanges();
+  }
   saveEleccion(): void {
     if (this.form.valid) {
       const { nombre, fecha } = this.form.value;

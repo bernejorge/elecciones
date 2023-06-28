@@ -1,3 +1,9 @@
+<style>
+  .md-datepicker-calendar-pane {
+      z-index: 1200;
+  }
+</style>
+
 <mat-dialog-content>
   <form [formGroup]="form" (ngSubmit)="saveEleccion()">
     <mat-form-field appearance="fill" class="input-field">
@@ -5,9 +11,9 @@
       <mat-error *ngIf="form.controls['nombre'].hasError('required')">El nombre es requerido</mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill" class="input-field">
-      <input matInput [matDatepicker]="picker" placeholder="Fecha" formControlName="fecha">
+      <input (click)="openCalendar()" matInput [matDatepicker]="picker" placeholder="Fecha" formControlName="fecha">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+      <mat-datepicker #picker touchUi></mat-datepicker>
     </mat-form-field>
     <div class="button-container">
       <button mat-button type="submit" [disabled]="form.invalid">Guardar</button>

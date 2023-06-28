@@ -1,0 +1,16 @@
+.microphone-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+.microphone-button.button-pressed .fa-microphone {
+  color: red; /* Cambiar el color a rojo mientras el botón está presionado */
+}

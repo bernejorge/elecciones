@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FiscalesMesasService } from 'src/app/Shared/services/fiscales-mesas.service';
+import { FiscalesService } from 'src/app/Shared/services/fiscales-mesas.service';
 import { SetupService } from 'src/app/Shared/services/setup.service';
 import { FiscalMesa } from 'src/app/models/FiscalMesa';
 import { FiscalMesaModalComponent } from './fiscal-mesa-modal/fiscal-mesa-modal.component';
@@ -19,7 +19,7 @@ export class FiscalesMesasComponent implements OnInit {
   dataSource!: MatTableDataSource<FiscalMesa>;
   displayedColumns: string[] = ['escuela', 'mesa', 'eleccion', 'nombre', 'telefono', 'acciones'];
 
-  constructor(private setupService: SetupService, private fiscalService: FiscalesMesasService, public dialog: MatDialog) {
+  constructor(private setupService: SetupService, private fiscalService: FiscalesService, public dialog: MatDialog) {
 
   }
 
@@ -29,7 +29,7 @@ export class FiscalesMesasComponent implements OnInit {
   }
 
   loadData() {
-    this.fiscalService.getAllFiscales().subscribe(
+    this.fiscalService.getAllFiscalesMesas().subscribe(
       (res: FiscalMesa[]) => {
         this.fiscalesMesas = res.map(x => Object.assign(new FiscalMesa(), x));
         this.dataSource = new MatTableDataSource(this.fiscalesMesas);

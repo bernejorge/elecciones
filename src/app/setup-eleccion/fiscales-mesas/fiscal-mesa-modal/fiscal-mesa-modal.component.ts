@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { SelectCompaneroModalComponent } from 'src/app/Shared/components/select-companero-modal/select-companero-modal.component';
 import { CrudService } from 'src/app/Shared/services/crud.service';
-import { FiscalesMesasService } from 'src/app/Shared/services/fiscales-mesas.service';
+import { FiscalesService } from 'src/app/Shared/services/fiscales-mesas.service';
 import { SetupService } from 'src/app/Shared/services/setup.service';
 import { Companero } from 'src/app/models/Companero';
 import { Eleccion } from 'src/app/models/Elecciones';
@@ -32,7 +32,7 @@ export class FiscalMesaModalComponent implements OnInit {
     private setupService: SetupService,
     public dialogRef: MatDialogRef<FiscalMesaModalComponent>,
     private formBuilder: FormBuilder,
-    private fiscalService: FiscalesMesasService,
+    private fiscalService: FiscalesService,
     private abmService: CrudService,
     @Inject(MAT_DIALOG_DATA) public data: { fiscal: FiscalMesa | undefined }
   ) {
@@ -100,8 +100,6 @@ export class FiscalMesaModalComponent implements OnInit {
         console.log(result);
         this.companeroSeleccionado = result;
         this.form.get('companero_id')?.setValue(result.id);
-
-
       }
     });
   }

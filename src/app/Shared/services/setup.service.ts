@@ -5,6 +5,7 @@ import { API_URLS, AppSetings } from 'src/app/app-setting/app-config.token';
 
 import { Eleccion } from 'src/app/models/Elecciones';
 import { Escuela } from 'src/app/models/Escuela';
+import { ListaElectoral } from 'src/app/models/ListaElectoral';
 import { MesasElectoral } from 'src/app/models/MesaElectoral';
 
 @Injectable({
@@ -52,6 +53,22 @@ export class SetupService {
     };
 
     return this.http.get<MesasElectoral[]>(endPoint, httpOptions);
+  }
+
+  getPartidosByEleccion(){
+    const endPoint = this.url + "listas/obtenerPorEleccion";
+    const eleccion_id = this.eleccion ? this.eleccion.id : 0;
+
+    const params = new HttpParams()
+      .set('idEleccion', eleccion_id);
+
+
+    const httpOptions = {
+      headers: this.getHttpHeaders(),
+      params: params,
+    };
+
+    return this.http.get<ListaElectoral[]>(endPoint, httpOptions);
   }
 }
 
