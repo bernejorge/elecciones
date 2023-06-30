@@ -1,24 +1,36 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Inject, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CrudService } from 'src/app/Shared/services/crud.service';
 import { Eleccion } from 'src/app/models/Elecciones';
 import Swal from 'sweetalert2';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+
+
+import { Subscription } from 'rxjs';
 import { FunctionCall } from 'src/app/models/FunctionInterface';
 import { FunctionCallingService } from 'src/app/Shared/services/functionCalling.service';
-import { Subscription } from 'rxjs';
-
-
 
 @Component({
   selector: 'app-modal-alta',
   templateUrl: './modal-alta.component.html',
   styleUrls: ['./modal-alta.component.css'],
-  providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
-  ]
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class ModalAltaComponent implements OnInit, OnDestroy {
   @Input() eleccion: Eleccion | undefined; // Instancia de eleccion o undefined para indicar si es un update
@@ -35,26 +47,26 @@ export class ModalAltaComponent implements OnInit, OnDestroy {
     private zone: NgZone,
     @Inject(MAT_DIALOG_DATA) public data: { eleccion: Eleccion | undefined }
   ) {
-
     this.funciones.push(
       {
         name: 'guardar',
-        description: 'Save or update the current intance of Eleccion in database and close the dialog.',
+        description:
+          'Save or update the current intance of Eleccion in database and close the dialog.',
         parameters: {
           type: 'object',
-          properties: {}
-        }
+          properties: {},
+        },
       },
       {
         name: 'cancelar_Cerrar',
-        description: 'Cancel or abort the save or update action and close the dialog',
+        description:
+          'Cancel or abort the save or update action and close the dialog',
         parameters: {
           type: 'object',
-          properties: {}
-        }
+          properties: {},
+        },
       }
     );
-
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -63,48 +75,43 @@ export class ModalAltaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.funtionCallService.addFunctions(this.funciones);
-    this.subscription = this.funtionCallService.functionReturned$
-      .subscribe({
-        next: (data: string) => {
-          // logica para llamar a las funcion devuelta por el servicio
-          this.zone.run(() => {
-            if (data.length > 0 && data.includes("name")) {
-              const responseObject = JSON.parse(data);
-              switch (responseObject.name.trim()) {
-                case "guardar":
-                  this.saveEleccion();
-                  break;
-                case "cancelar_Cerrar":
-                  this.closeModal();
-                  break;
-                default:
-                  break;
-              }
+    this.subscription = this.funtionCallService.functionReturned$.subscribe({
+      next: (data: string) => {
+        // logica para llamar a las funcion devuelta por el servicio
+        this.zone.run(() => {
+          if (data.length > 0 && data.includes('name')) {
+            const responseObject = JSON.parse(data);
+            switch (responseObject.name.trim()) {
+              case 'guardar':
+                this.saveEleccion();
+                break;
+              case 'cancelar_Cerrar':
+                this.closeModal();
+                break;
+              default:
+                break;
             }
-
-          });
-
-        },
-        error: (error) => {
-          console.log(error);
-        }
-      });
+          }
+        });
+      },
+      error: (error: any) => {
+        console.log(error);
+      },
+    });
     this.eleccion = this.data.eleccion ? this.data.eleccion : undefined;
     this.form = this.formBuilder.group({
       nombre: ['', Validators.required],
-      fecha: ['', Validators.required]
+      fecha: ['', Validators.required],
     });
 
     if (this.eleccion) {
       // Si se proporciona un valor para eleccion, actualizar los datos del formulario
       this.form.patchValue({
         nombre: this.eleccion.nombre,
-        fecha: this.eleccion.fecha
+        fecha: this.eleccion.fecha,
       });
     }
-
   }
-
 
   saveEleccion(): void {
     if (this.form.valid) {
@@ -120,7 +127,7 @@ export class ModalAltaComponent implements OnInit, OnDestroy {
             Swal.fire({
               icon: 'success',
               title: 'Actualización exitosa',
-              text: JSON.stringify(data)
+              text: JSON.stringify(data),
             });
             this.dialogRef.close({ nombre, fecha });
           },
@@ -128,7 +135,7 @@ export class ModalAltaComponent implements OnInit, OnDestroy {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: JSON.stringify(error)
+              text: JSON.stringify(error),
             });
             this.dialogRef.close({ nombre, fecha });
           }
@@ -144,7 +151,7 @@ export class ModalAltaComponent implements OnInit, OnDestroy {
             Swal.fire({
               icon: 'success',
               title: 'Guardado exitoso',
-              text: JSON.stringify(data)
+              text: JSON.stringify(data),
             });
             this.dialogRef.close({ nombre, fecha });
           },
@@ -152,7 +159,7 @@ export class ModalAltaComponent implements OnInit, OnDestroy {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: JSON.stringify(error)
+              text: JSON.stringify(error),
             });
             this.dialogRef.close({ nombre, fecha });
           }
@@ -164,6 +171,8 @@ export class ModalAltaComponent implements OnInit, OnDestroy {
   closeModal(event?: Event) {
     event?.stopPropagation();
     event?.preventDefault();
-    this.dialogRef.close();
+    this.zone.run(() => {
+      this.dialogRef.close();
+    });
   }
 }
