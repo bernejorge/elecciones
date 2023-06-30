@@ -1,3 +1,7 @@
+.custom-modal-container {
+  z-index: 1200;
+}
+
 .input-field {
   width: 100%;
 }
@@ -13,6 +17,3 @@
   align-items: center;
 }
 
-.cdk-overlay-pane  {
-  z-index: 1555 !important;
-}

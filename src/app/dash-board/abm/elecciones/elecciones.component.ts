@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { MatTableModule } from '@angular/material/table';
@@ -38,28 +38,28 @@ export class EleccionesComponent implements OnInit, OnDestroy {
     private router: Router,
     private setupService: SetupService,
     private functionCallingService: FunctionCallingService,
-    private changeDetectorRef: ChangeDetectorRef) {
-      this.funciones = [
-        {
-          name: 'agregar_eleccion',
-          description: 'Da de alta una eleccion, abre la vista que contiene el formulario para dar de alta una eleccion en la base de datos',
-          parameters: {
-            type: "object",
-            properties: {
-              nombre: {
-                type: "string",
-                description: "El nombre con el que se registra la eleccion"
-              },
-              fecha: {
-                type: "string",
-                description: "La fecha de la eleccion en formato yyyy/MM/dd"
-              }
+    private zone: NgZone) {
+    this.funciones = [
+      {
+        name: 'agregar_eleccion',
+        description: 'Da de alta una eleccion, abre la vista que contiene el formulario para dar de alta una eleccion en la base de datos',
+        parameters: {
+          type: "object",
+          properties: {
+            nombre: {
+              type: "string",
+              description: "El nombre con el que se registra la eleccion"
             },
-            required: ["nombre"]
+            fecha: {
+              type: "string",
+              description: "La fecha de la eleccion en formato yyyy/MM/dd"
+            }
           },
-        }
-      ];
-      this.functionCallingService.addFunctions(this.funciones);
+          required: ["nombre"]
+        },
+      }
+    ];
+    this.functionCallingService.addFunctions(this.funciones);
 
   }
   ngOnDestroy(): void {
@@ -71,31 +71,43 @@ export class EleccionesComponent implements OnInit, OnDestroy {
     this.subscription = this.functionCallingService.functionReturned$.subscribe((data: string) => {
       if (data.length > 0 && data.includes("name") && data.includes("arguments")) {
         //obtener funcion
-        const responseObject = JSON.parse(data);
-
-        const { name, arguments: argumentsString } = responseObject; // Desestructuración para obtener name y arguments
-        let argumentsObject;
-
-        //obtener argumentos de la función
+        let responseObject;
         try {
-           argumentsObject = JSON.parse(argumentsString); // Convertir la cadena de texto de arguments a un objeto
+          responseObject = JSON.parse(data);
+          //si se puede convertir a objeto, la propiedad name tiene el nombre de la funcion
+
+          if (typeof responseObject.arguments === 'string') {
+            // El valor de arguments es una cadena de texto
+            responseObject.arguments = JSON.parse(responseObject.arguments);
+          } else if (typeof responseObject.arguments === 'object') {
+            // El valor de arguments es un objeto
+
+          } else {
+            // El valor de arguments no es ni una cadena ni un objeto
+            console.error('El valor de arguments no es una cadena ni un objeto:', responseObject.arguments);
+            throw new Error("El valor de arguments no es una cadena ni un objeto");
+          }
+          // Obtener los parámetros individuales
+          const nombre = responseObject.arguments.nombre ? responseObject.arguments.nombre : "";
+          const fecha = responseObject.arguments.fecha ? responseObject.arguments.fecha : "";
+
+          // Verificar el nombre de la función y ejecutarla con los argumentos correspondientes
+          switch (responseObject.name) {
+            case 'agregar_eleccion':
+              this.zone.run(() => {
+                this.abrirModalAgregar(nombre, fecha);
+              });
+              break;
+            default:
+              console.log('La función no está definida o no se proporcionó un nombre válido.');
+          }
+          console.log(data);
+
         } catch (error) {
-
+          console.error("Error al parsear la respuesta a json")
         }
 
-        // Obtener los parámetros individuales
-        const nombre = argumentsObject.nombre ? argumentsObject.nombre : "";
-        const fecha = argumentsObject.fecha ? argumentsObject.fecha : "";
 
-        // Verificar el nombre de la función y ejecutarla con los argumentos correspondientes
-        switch (responseObject.name) {
-          case 'agregar_eleccion':
-            this.abrirModalAgregar(nombre, fecha);
-            break;
-          default:
-            console.log('La función no está definida o no se proporcionó un nombre válido.');
-        }
-        console.log(data);
 
       }
 
@@ -103,40 +115,40 @@ export class EleccionesComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadData(){
+  loadData() {
     const eleccion = new Eleccion();
-    // console.log(res);
-    // this.problemas = res.Problemas.map(x=> Object.assign(new Problema(),x));
-    // this.problemasFiltrados = this.problemas;
     this.abmService.getAllEntity(eleccion).subscribe(
       (data: any[]) => {
-        this.elecciones = data.map(x=> Object.assign(new Eleccion(),x));
+        this.elecciones = data.map(x => Object.assign(new Eleccion(), x));
       }
     );
   }
 
   abrirModalAgregar(nombre?: string, fecha?: string): void {
     let fechaEleccion: any = undefined;
-    if(fecha !== undefined && fecha.length > 0) {
-      if (this.isValidDate(fecha)){
+    if (fecha !== undefined && fecha.length > 0) {
+      if (this.isValidDate(fecha)) {
         fechaEleccion = new Date(fecha);
       }
     }
 
     const dialogRef = this.dialog.open(ModalAltaComponent, {
       data: {
-        eleccion: undefined,
+        eleccion: { nombre: nombre, fecha: fechaEleccion },
       },
       width: '400px',
-      panelClass: 'custom-modal-background',
+      panelClass: 'custom-modal-container', // Agrega la clase CSS personalizada al panelClass,
+
     });
+
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('El modal se cerró');
-      this.loadData();
+      this.zone.run(() => {
+        console.log('El modal se cerró');
+        this.loadData();
+      });
     });
 
-    dialogRef.componentInstance.ngOnInit();
 
   }
   abrirModalActualizar(eleccion: Eleccion): void {

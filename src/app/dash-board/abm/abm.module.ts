@@ -39,5 +39,6 @@ import { ModalPartidosComponent } from './partidos/modal-partidos/modal-partidos
     FormsModule,
     ReactiveFormsModule,
   ],
+
 })
 export class AbmModule {}

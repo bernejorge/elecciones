@@ -10,7 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class FunctionCallingService {
   private functionsCallings: FunctionCall[] = [];
-  private functionReturned  = new BehaviorSubject<string>("");
+  private functionReturned = new BehaviorSubject<string>("");
   public functionReturned$ = this.functionReturned.asObservable();
   openAiApiKey: string;
   private configuration: Configuration;
@@ -49,7 +49,7 @@ export class FunctionCallingService {
     this.mensajes.push({
       role: 'assistant', content: prompt + " Don't make assumptions about what values to plug into functions. " +
         " Ask for clarification if a user request is ambiguous. Only the values in the enum are valid. If it is not in the enum, it informs the user of the situation. " +
-        "Your Goail is allways respon in valid json format. "
+        "Your Goal is allways response in valid json format. "
     })
 
 
@@ -61,12 +61,12 @@ export class FunctionCallingService {
           this.mensajes.push({ role: 'user', content: text });
 
           if (this.mensajes.length > 10) {
-            this.mensajes.splice(1,1); // Elimina el elemento más antiguo del arreglo
+            this.mensajes.splice(1, 1); // Elimina el elemento más antiguo del arreglo
           }
 
           const response = await this.openai.createChatCompletion({
             model: 'gpt-3.5-turbo-0613',
-            temperature: 0,
+            temperature: 0.2,
             messages: this.mensajes,
             functions: this.functionsCallings
           });
@@ -78,20 +78,25 @@ export class FunctionCallingService {
               this.mensajes.push({ role: 'assistant', content: response.data.choices[0].message.content });
               //console.log(response.data.choices[0].message.content);
               //notifico a los observadores
-              if (response.data.choices[0].message.content){
+              if (response.data.choices[0].message.content) {
 
-                this.functionReturned.next(response.data.choices[0].message.content)
+                this.functionReturned.next((response.data.choices[0].message.content));
                 const m = response.data.choices[0].message.content;
-                if (!m.includes("name") && !m.includes("arguments")){
-                  this.textToSpeechService.speak(m);
+                if (!m.includes("name") && !m.includes("arguments")) {
+                  // Removemos las comillas exteriores
+                  const trimmedString = m.replace(/^"|"$/g, '');
+
+                  // Removemos los caracteres de escape adicionales
+                  const unescapedString = trimmedString.replace(/\\"/g, '"');
+                  this.textToSpeechService.speak(unescapedString);
                 }
               }
             } else {
-             //finalizado por function call
-             const rta = JSON.stringify(response.data.choices[0].message.function_call);
-             //notifico a los observadores
-             this.functionReturned.next(rta)
-              this.mensajes.push({ role: 'assistant', content:rta });
+              //finalizado por function call
+              const rta = JSON.stringify(response.data.choices[0].message.function_call);
+              //notifico a los observadores
+              this.functionReturned.next(rta)
+              this.mensajes.push({ role: 'assistant', content: rta });
               //console.log(response.data.choices[0].message.function_call);
             }
             if (this.mensajes.length > 10) {

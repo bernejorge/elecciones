@@ -4,7 +4,7 @@
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
-    <mat-accordion>
+    <mat-accordion multi="true">
       <mat-expansion-panel class="mat-elevation-z0" [expanded]="isABMExpanded">
         <mat-expansion-panel-header>
           <mat-panel-title>Seccion de ABMs</mat-panel-title>

@@ -50,8 +50,6 @@ export class SpeechRecognitionService {
 
     };
 
-    // this.recognition.onerror = (event: any) => {
-    //   this.transcriptionSubject.error(event.error);
-    // };
+
   }
 }
