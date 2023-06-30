@@ -14,7 +14,7 @@ export class AppConfigService {
   }
 
    loadAppConfig(): Observable<AppSetings> {
-    return this.http.get<AppSetings>('/assets/config.json').pipe(
+    return this.http.get<AppSetings>('assets/config.json').pipe(
       tap((data: AppSetings) => {
         this.appConfig$.next(data);
       })
