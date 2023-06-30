@@ -19,10 +19,10 @@ export class FunctionCallingService {
   mensajes: any = [];
 
   constructor(private speechService: SpeechRecognitionService, private textToSpeechService: TextToSpeechService) {
-    this.openAiApiKey = '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'; // Reemplaza con tu API key de OpenAI
+    this.openAiApiKey = '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'; // Reemplaza con tu API key de OpenAI
 
     this.configuration = new Configuration({
-      apiKey: "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",
+      apiKey: "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",
     });
 
     this.functionsCallings.push({
