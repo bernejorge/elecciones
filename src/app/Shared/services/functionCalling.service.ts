@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { FunctionCall } from 'src/app/models/FunctionInterface';
-import { Configuration, OpenAIApi } from 'openai';
+import { Configuration, CreateChatCompletionResponse, OpenAIApi } from 'openai';
 import { SpeechRecognitionService } from './speech-recognition.service';
 import { TextToSpeechService } from './text-to-speech.service';
 import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { API_URLS, AppSetings } from 'src/app/app-setting/app-config.token';
 
 @Injectable({
   providedIn: 'root'
@@ -12,39 +14,15 @@ export class FunctionCallingService {
   private functionsCallings: FunctionCall[] = [];
   private functionReturned = new BehaviorSubject<string>("");
   public functionReturned$ = this.functionReturned.asObservable();
-  openAiApiKey: string;
-  private configuration: Configuration;
-  openai!: OpenAIApi;
 
+  openai!: OpenAIApi;
+  private api_url: string;
   mensajes: any = [];
 
-  constructor(private speechService: SpeechRecognitionService, private textToSpeechService: TextToSpeechService) {
-    this.openAiApiKey = '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'; // Reemplaza con tu API key de OpenAI
+  constructor(private speechService: SpeechRecognitionService, private textToSpeechService: TextToSpeechService,
+    private http: HttpClient, @Inject(API_URLS) private Urls: AppSetings) {
 
-    this.configuration = new Configuration({
-      apiKey: "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",
-    });
-
-    this.functionsCallings.push({
-      name: 'obtenerTurno',
-      description: "Obtain an appointment in any of the available medical institutions, for any of the available medical services",
-      parameters: {
-        type: 'object',
-        properties: {
-          medicalInstitution: {
-            type: 'string',
-            description: 'Only the values in the enum are valid. If it is not in the enum, ask the to user to select other .',
-            enum: ["Hospital Italiano", "Reina Fabiola", "Hospital Plaza", "Clinica Montegrande", "Clinica San Vicente", "Clinica Privada Velez Sarsfield"]
-          },
-          medicalService: {
-            type: 'string',
-            enum: ["cardiologia", "traumatologia", "odontologia", "pediatria", "clinica medica"]
-          }
-        },
-        required: ['medicalInstitution', 'medicalService']
-      },
-
-    });
+    this.api_url = Urls.apiUrl;
 
     this.mensajes.push({
       role: 'assistant', content: prompt + " Don't make assumptions about what values to plug into functions. " +
@@ -52,61 +30,118 @@ export class FunctionCallingService {
         "Your Goal is allways response in valid json format. "
     })
 
-
     this.speechService.transcriptionSubject.subscribe(
       async (text: string) => {
         if (text.trim().length > 0) {
-          //recibo el texto de la transcripcion para enviar a chargpt
-          this.openai = new OpenAIApi(this.configuration);
           this.mensajes.push({ role: 'user', content: text });
 
           if (this.mensajes.length > 10) {
-            this.mensajes.splice(1, 1); // Elimina el elemento más antiguo del arreglo
+            this.mensajes.splice(1, 1);
           }
 
-          const response = await this.openai.createChatCompletion({
+          const requestBody = {
             model: 'gpt-3.5-turbo-0613',
             temperature: 0.2,
             messages: this.mensajes,
             functions: this.functionsCallings
-          });
+          };
 
-          if (response.data.choices[0].message) {
-            console.log(response.data.choices[0].message);
-            console.log("Motivo de finalizad0 = " + response.data.choices[0].finish_reason);
-            if (response.data.choices[0].finish_reason !== 'function_call') {
-              this.mensajes.push({ role: 'assistant', content: response.data.choices[0].message.content });
-              //console.log(response.data.choices[0].message.content);
-              //notifico a los observadores
-              if (response.data.choices[0].message.content) {
+          try {
+            const response = await this.http.post<any>(`${this.api_url}gpt`, requestBody).toPromise();
 
-                this.functionReturned.next((response.data.choices[0].message.content));
-                const m = response.data.choices[0].message.content;
+            if (response && response.data) {
+              const responseData = response.data;
+
+            console.log(responseData.choices[0].message);
+            console.log("Motivo de finalizad0 = " + responseData.choices[0].finish_reason);
+
+            if (responseData.choices[0].finish_reason !== 'function_call') {
+              this.mensajes.push({ role: 'assistant', content: responseData.choices[0].message.content });
+
+              if (responseData.choices[0].message.content) {
+                this.functionReturned.next(responseData.choices[0].message.content);
+                const m = responseData.choices[0].message.content;
+
                 if (!m.includes("name") && !m.includes("arguments")) {
-                  // Removemos las comillas exteriores
                   const trimmedString = m.replace(/^"|"$/g, '');
-
-                  // Removemos los caracteres de escape adicionales
                   const unescapedString = trimmedString.replace(/\\"/g, '"');
                   this.textToSpeechService.speak(unescapedString);
                 }
               }
             } else {
-              //finalizado por function call
-              const rta = JSON.stringify(response.data.choices[0].message.function_call);
-              //notifico a los observadores
-              this.functionReturned.next(rta)
+              const rta = JSON.stringify(responseData.choices[0].message.function_call);
+              this.functionReturned.next(rta);
               this.mensajes.push({ role: 'assistant', content: rta });
-              //console.log(response.data.choices[0].message.function_call);
             }
+
             if (this.mensajes.length > 10) {
-              this.mensajes.shift(); // Elimina el elemento más antiguo del arreglo
+              this.mensajes.shift();
             }
+
+            }
+
+          } catch (error) {
+            console.error(error);
+            // Manejo de errores
           }
         }
-
       }
     );
+
+    // this.speechService.transcriptionSubject.subscribe(
+    //   async (text: string) => {
+    //     if (text.trim().length > 0) {
+    //       //recibo el texto de la transcripcion para enviar a chargpt
+    //       this.openai = new OpenAIApi(this.configuration);
+    //       this.mensajes.push({ role: 'user', content: text });
+
+    //       if (this.mensajes.length > 10) {
+    //         this.mensajes.splice(1, 1); // Elimina el elemento más antiguo del arreglo
+    //       }
+
+    //       const response = await this.openai.createChatCompletion({
+    //         model: 'gpt-3.5-turbo-0613',
+    //         temperature: 0.2,
+    //         messages: this.mensajes,
+    //         functions: this.functionsCallings
+    //       });
+
+    //       if (response.data.choices[0].message) {
+    //         console.log(response.data.choices[0].message);
+    //         console.log("Motivo de finalizad0 = " + response.data.choices[0].finish_reason);
+    //         if (response.data.choices[0].finish_reason !== 'function_call') {
+    //           this.mensajes.push({ role: 'assistant', content: response.data.choices[0].message.content });
+    //           //console.log(response.data.choices[0].message.content);
+    //           //notifico a los observadores
+    //           if (response.data.choices[0].message.content) {
+
+    //             this.functionReturned.next((response.data.choices[0].message.content));
+    //             const m = response.data.choices[0].message.content;
+    //             if (!m.includes("name") && !m.includes("arguments")) {
+    //               // Removemos las comillas exteriores
+    //               const trimmedString = m.replace(/^"|"$/g, '');
+
+    //               // Removemos los caracteres de escape adicionales
+    //               const unescapedString = trimmedString.replace(/\\"/g, '"');
+    //               this.textToSpeechService.speak(unescapedString);
+    //             }
+    //           }
+    //         } else {
+    //           //finalizado por function call
+    //           const rta = JSON.stringify(response.data.choices[0].message.function_call);
+    //           //notifico a los observadores
+    //           this.functionReturned.next(rta)
+    //           this.mensajes.push({ role: 'assistant', content: rta });
+    //           //console.log(response.data.choices[0].message.function_call);
+    //         }
+    //         if (this.mensajes.length > 10) {
+    //           this.mensajes.shift(); // Elimina el elemento más antiguo del arreglo
+    //         }
+    //       }
+    //     }
+
+    //   }
+    // );
   }
 
   crearPrompt() {
