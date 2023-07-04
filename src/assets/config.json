@@ -1,4 +1,4 @@
 {
-  "apiUrl": "https://demoelecciones-lxz424aadq-rj.a.run.app//api/",
+  "apiUrl": "http://localhost:3000/api/",
   "loginUrl": "http://innova.1704.dev.tipsalud.local/Asistencial/LogisticaDePaciente/IntegracionPortalApi"
 }

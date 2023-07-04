@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { CrudService } from 'src/app/Shared/services/crud.service';
 import { SetupService } from 'src/app/Shared/services/setup.service';
 import { ListaElectoral } from 'src/app/models/ListaElectoral';
 import Swal from 'sweetalert2';
+import { ModalListasComponent } from './modal-listas/modal-listas.component';
 
 @Component({
   selector: 'app-listas-electorales',
@@ -14,9 +15,10 @@ import Swal from 'sweetalert2';
 export class ListasElectoralesComponent implements OnInit {
   listasElectorales!: ListaElectoral[];
   dataSource!: MatTableDataSource<ListaElectoral>;
-  displayedColumns: string[] = ['numero', 'nombre', 'partido', 'candidato'];
+  displayedColumns: string[] = ['numero', 'nombre', 'partido', 'cargo', 'candidato'];
 
-  constructor(private abmService: CrudService, private setupService: SetupService, public dialog: MatDialog) {
+  constructor(private abmService: CrudService, private setupService: SetupService,
+    public dialog: MatDialog, private zone: NgZone) {
 
   }
 
@@ -35,7 +37,28 @@ export class ListasElectoralesComponent implements OnInit {
 
   }
 
-  borrarFiscalMesa(l: ListaElectoral) {
+  abrirModalAgregar(lista?: ListaElectoral): void {
+    const dialogRef = this.dialog.open(ModalListasComponent, {
+      data: {
+        eleccion: { lista },
+      },
+      width: '400px',
+      panelClass: 'custom-modal-container', // Agrega la clase CSS personalizada al panelClass,
+
+    });
+
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.zone.run(() => {
+        console.log('El modal se cerró');
+        this.loadData();
+      });
+    });
+
+
+  }
+
+  borrarListaElectoral(l: ListaElectoral) {
 
     Swal.fire({
       title: '¿Estás seguro?',
@@ -54,8 +77,8 @@ export class ListasElectoralesComponent implements OnInit {
           res => {
             Swal.fire({
               icon: 'success',
-              title: 'Escuela borrada',
-              text: 'La mesa  ha sido borrada exitosamente'
+              title: 'Lista Borrada borrada',
+              text: 'La lista elecotral ha sido borrada exitosamente'
             });
             this.loadData();
           },
