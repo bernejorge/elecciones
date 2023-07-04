@@ -37,7 +37,7 @@ export class ListasElectoralesComponent implements OnInit {
 
   }
 
-  abrirModalAgregar(lista?: ListaElectoral): void {
+  abrirModal(lista?: ListaElectoral): void {
     const dialogRef = this.dialog.open(ModalListasComponent, {
       data: {
         eleccion: { lista },

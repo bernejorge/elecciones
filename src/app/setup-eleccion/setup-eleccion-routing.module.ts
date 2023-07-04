@@ -5,6 +5,7 @@ import { MesasComponent } from '../dash-board/abm/mesas/mesas.component';
 import { FiscalesMesasComponent } from './fiscales-mesas/fiscales-mesas.component';
 import { FiscalGeneral } from '../models/FiscalGeneral';
 import { FiscalesGeneralesComponent } from './fiscales-generales/fiscales-generales.component';
+import { ListasElectoralesComponent } from './listas-electorales/listas-electorales.component';
 
 
 const routes: Routes = [
@@ -14,7 +15,8 @@ const routes: Routes = [
     children: [
       {path: 'mesa-electoral', component: MesasComponent},
       {path: 'fiscales-mesas', component: FiscalesMesasComponent},
-      {path: 'fiscales-generales', component: FiscalesGeneralesComponent}
+      {path: 'fiscales-generales', component: FiscalesGeneralesComponent},
+      {path: 'listas', component: ListasElectoralesComponent}
     ],
   }
 ];

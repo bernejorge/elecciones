@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SelectCompaneroModalComponent } from './Shared/components/select-companero-modal/select-companero-modal.component';
 import { FormsModule } from '@angular/forms';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { SelectCandidatoComponent } from './Shared/components/select-candidato/select-candidato.component';
 
 
 
@@ -18,6 +19,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
   declarations: [
     AppComponent,
     SelectCompaneroModalComponent,
+    SelectCandidatoComponent,
 
 
   ],
