@@ -1,8 +1,12 @@
 <mat-sidenav-container id="ja" class="sidenav-container sidebar-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
     <mat-toolbar>Menu</mat-toolbar>
     <mat-accordion multi="true">
       <mat-expansion-panel class="mat-elevation-z0" [expanded]="isABMExpanded">
@@ -11,34 +15,57 @@
         </mat-expansion-panel-header>
 
         <mat-nav-list>
-          <a mat-list-item
+          <a
+            mat-list-item
             routerLink="/dash/abm/elecciones"
             (click)="selectItem('elecciones')"
-            [ngClass]="{'active': selectedItem === 'elecciones'}">Elecciones</a>
-          <a mat-list-item
+            [ngClass]="{ active: selectedItem === 'elecciones' }"
+            >Elecciones</a
+          >
+          <a
+            mat-list-item
             routerLink="/dash/abm/companeros"
             (click)="selectItem('companeros')"
-            [ngClass]="{'active': selectedItem === 'companeros'}">Compañeros</a>
-          <a mat-list-item
+            [ngClass]="{ active: selectedItem === 'companeros' }"
+            >Compañeros</a
+          >
+          <a
+            mat-list-item
             routerLink="/dash/abm/escuelas"
             (click)="selectItem('escuelas')"
-            [ngClass]="{'active': selectedItem === 'escuelas'}">Escuelas</a>
-          <a mat-list-item
+            [ngClass]="{ active: selectedItem === 'escuelas' }"
+            >Escuelas</a
+          >
+          <a
+            mat-list-item
             routerLink="/dash/abm/mesas"
             (click)="selectItem('mesas')"
-            [ngClass]="{'active': selectedItem === 'mesas'}">Mesas Electorales</a>
-          <a mat-list-item
+            [ngClass]="{ active: selectedItem === 'mesas' }"
+            >Mesas Electorales</a
+          >
+          <a
+            mat-list-item
             routerLink="/dash/abm/candidatos"
             (click)="selectItem('candidatos')"
-            [ngClass]="{'active': selectedItem === 'candidatos'}">Candidatos</a>
-          <a mat-list-item
+            [ngClass]="{ active: selectedItem === 'candidatos' }"
+            >Candidatos</a
+          >
+          <a
+            mat-list-item
+            routerLink="/dash/abm/cargos"
+            (click)="selectItem('cargos')"
+            [ngClass]="{ active: selectedItem === 'cargos' }"
+            >Cargos</a
+          >
+          <a
+            mat-list-item
             routerLink="/dash/abm/partidos"
             (click)="selectItem('partidos')"
-            [ngClass]="{'active': selectedItem === 'partidos'}">Partidos Políticos</a>
+            [ngClass]="{ active: selectedItem === 'partidos' }"
+            >Partidos Políticos</a
+          >
         </mat-nav-list>
-
       </mat-expansion-panel>
-
     </mat-accordion>
     <mat-accordion class="app-nav-accordion">
       <mat-nav-list>
@@ -47,13 +74,13 @@
       </mat-nav-list>
       <mat-expansion-panel class="mat-elevation-z0">
         <mat-expansion-panel-header>
-            <mat-panel-title>Section Two</mat-panel-title>
+          <mat-panel-title>Section Two</mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-            <a mat-list-item>Item Three</a>
-            <a mat-list-item>Item Four</a>
+          <a mat-list-item>Item Three</a>
+          <a mat-list-item>Item Four</a>
         </mat-nav-list>
-    </mat-expansion-panel>
+      </mat-expansion-panel>
     </mat-accordion>
   </mat-sidenav>
 
@@ -69,9 +96,6 @@
       </button>
       <span class="example-spacer"></span>
       <span>Elecciones 2023</span>
-
-
-
     </mat-toolbar>
     <router-outlet></router-outlet>
 

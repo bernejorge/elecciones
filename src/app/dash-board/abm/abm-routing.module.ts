@@ -6,6 +6,7 @@ import { EscuelasComponent } from './escuelas/escuelas.component';
 import { MesasComponent } from './mesas/mesas.component';
 import { CandidatosComponent } from './candidatos/candidatos.component';
 import { PartidosComponent } from './partidos/partidos.component';
+import { CargosComponent } from './cargos/cargos.component';
 
 const routes: Routes = [
   {path: 'elecciones', component:EleccionesComponent},
@@ -13,7 +14,8 @@ const routes: Routes = [
   {path: 'escuelas', component: EscuelasComponent},
   {path: 'mesas', component: MesasComponent},
   {path: 'candidatos', component:CandidatosComponent},
-  {path: 'partidos', component: PartidosComponent}
+  {path: 'partidos', component: PartidosComponent},
+  {path: 'cargos', component: CargosComponent},
   // { path: 'setup-elecciones', loadChildren: () => import('./../setup-eleccion/setup-eleccion.module').then(m => m.SetupEleccionModule) },
 ];
 

@@ -16,6 +16,8 @@ import { CandidatosComponent } from './candidatos/candidatos.component';
 import { CandidatosModalComponent } from './candidatos/candidatos-modal/candidatos-modal.component';
 import { PartidosComponent } from './partidos/partidos.component';
 import { ModalPartidosComponent } from './partidos/modal-partidos/modal-partidos.component';
+import { CargosComponent } from './cargos/cargos.component';
+import { ModalCargosAltaComponent } from './cargos/modal-cargos-alta/modal-cargos-alta.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,8 @@ import { ModalPartidosComponent } from './partidos/modal-partidos/modal-partidos
     CandidatosModalComponent,
     PartidosComponent,
     ModalPartidosComponent,
+    CargosComponent,
+    ModalCargosAltaComponent,
   ],
   imports: [
     CommonModule,
