@@ -20,6 +20,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -47,7 +48,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatCardModule,
     MatIconModule,
     MatExpansionModule,
-    MatPaginatorModule
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule { }

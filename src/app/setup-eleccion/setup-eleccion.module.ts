@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FiscalGeneralModalComponent } from './fiscales-generales/fiscal-general-modal/fiscal-general-modal.component';
 import { ListasElectoralesComponent } from './listas-electorales/listas-electorales.component';
 import { ModalListasComponent } from './listas-electorales/modal-listas/modal-listas.component';
+import { FilterPartidosPipe } from '../Shared/pipes/filter-partidos.pipe';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { ModalListasComponent } from './listas-electorales/modal-listas/modal-li
     FiscalMesaModalComponent,
     FiscalGeneralModalComponent,
     ListasElectoralesComponent,
-    ModalListasComponent
+    ModalListasComponent,
+    FilterPartidosPipe // Agrega el pipe aquí
   ],
   imports: [
     CommonModule,

@@ -31,7 +31,7 @@ export class ListasService {
   }
 
   getAllByEleccion(){
-    const endPoint = this.url + 'listas/getByEleccion';
+    const endPoint = this.url + 'listas/obtenerPorEleccion';
     let eleccion_id = 0;
     if(this.eleccion) {
       eleccion_id = this.eleccion.id;
