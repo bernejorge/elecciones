@@ -5,13 +5,14 @@
     <div class="form-row">
       <div class="form-column">
         <mat-form-field appearance="fill" class="select-field">
-          <mat-label>Seleccionar Partido</mat-label>
-          <mat-select formControlName="partido_id" [(ngModel)]="form.value.partido_id">
-            <mat-option *ngFor="let partido of partidos" [value]="partido.id">
-              {{ partido.nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+  <mat-label>Seleccionar Partido</mat-label>
+  <mat-select formControlName="partido_id" [(ngModel)]="form.value.partido_id" [formControl]="partidoFiltrado">
+    <mat-option *ngFor="let partido of partidosFiltrados" [value]="partido.id">
+      {{ partido.nombre }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
       </div>
 
     </div>
