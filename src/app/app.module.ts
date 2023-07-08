@@ -7,11 +7,16 @@ import { MaterialModule } from './Shared/modules/material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppConfigService, appConfigServiceInitializer } from './app-setting/app-config.service';
 import { API_URLS } from './app-setting/app-config.token';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { SelectCompaneroModalComponent } from './Shared/components/select-companero-modal/select-companero-modal.component';
 import { FormsModule } from '@angular/forms';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { SelectCandidatoComponent } from './Shared/components/select-candidato/select-candidato.component';
+import { EscrutinioModule } from './Escrutinio/escrutinio.module';
+import { LayoutComponent } from './Escrutinio/layout/layout.component';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { SpinnerInterceptor } from './interceptors/spinner-interceptor';
+//import { SidebarEscrutinioComponent } from './Escrutinio/layout/sidebar-escrutinio/sidebar-escrutinio.component';
 
 
 
@@ -20,6 +25,8 @@ import { SelectCandidatoComponent } from './Shared/components/select-candidato/s
     AppComponent,
     SelectCompaneroModalComponent,
     SelectCandidatoComponent,
+    SpinnerComponent,
+
 
 
   ],
@@ -29,7 +36,8 @@ import { SelectCandidatoComponent } from './Shared/components/select-candidato/s
     AppRoutingModule,
     MaterialModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+
   ],
   providers: [
     AppConfigService,
@@ -44,7 +52,12 @@ import { SelectCandidatoComponent } from './Shared/components/select-candidato/s
       useFactory: (appConfigService: AppConfigService) => appConfigService.Urls,
       deps: [AppConfigService],
     },
-    { provide: MAT_DATE_LOCALE, useValue: 'es-AR' }
+    { provide: MAT_DATE_LOCALE, useValue: 'es-AR' },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SpinnerInterceptor,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })

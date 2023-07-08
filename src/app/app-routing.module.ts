@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: 'setup-elecccion',
     loadChildren:()=>import('./setup-eleccion/setup-eleccion.module').then((m) => m.SetupEleccionModule)
+  },
+  {
+    path: 'escrutinio/:id_eleccion',
+    loadChildren:()=>import('./Escrutinio/escrutinio.module').then((m) => m.EscrutinioModule)
   }
 ];
 
