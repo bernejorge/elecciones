@@ -1,4 +1,5 @@
 import { Cargo } from "./Cargo";
+import { ListaElectoral } from "./ListaElectoral";
 import { MesasElectoral } from "./MesaElectoral";
 
 export class ResultadoMesa {
@@ -12,12 +13,7 @@ export class ResultadoMesa {
   votosImpuganados!: number;
   MesaElectoral!: MesasElectoral | undefined;
   Cargo!: Cargo;
-  DetalleResultado!: any[];
-
-  constructor(mesa_id: number, cargo_id: number){
-    this.mesa_id = mesa_id;
-    this.cargo_id = cargo_id;
-  }
+  DetalleResultado: DetalleResultado[]=[];
 
 }
 
@@ -26,14 +22,8 @@ export class DetalleResultado {
   mesa_id!: number;
   cargo_id!: number;
   lista_id!: number;
-  cantidadVotos!: number;
+  cantidadVotos: number = 0;
+  listaElectoral! : ListaElectoral;
 
-  constructor(mesa_id: number, cargo_id: number, lista_id: number, cantidadVotos: number) {
-    this.mesa_id = mesa_id;
-    this.cargo_id = cargo_id;
-    this.lista_id = lista_id;
-    this.cantidadVotos = cantidadVotos;
-
-  }
 
 }

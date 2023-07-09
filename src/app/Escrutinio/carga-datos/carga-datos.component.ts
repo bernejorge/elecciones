@@ -9,6 +9,7 @@ import { CrudService } from 'src/app/Shared/services/crud.service';
 import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
+import { DetalleResultado, ResultadoMesa } from 'src/app/models/ResultadoMesa';
 
 @Component({
   selector: 'app-carga-datos',
@@ -25,6 +26,7 @@ export class CargaDatosComponent implements OnInit {
   mesa_id!: number;
   formulario: FormGroup;
   idCargoSelected : number = 0;
+  resultadoMesa!: ResultadoMesa
 
   constructor(private escrutinioService: EscrutinioService, private route: ActivatedRoute,
     private crudService: CrudService, private formBuilder: FormBuilder) {
@@ -89,13 +91,47 @@ export class CargaDatosComponent implements OnInit {
   }
 
   onSelectChange(event: MatSelectChange) {
-    // al cambiar el cargo, buscar si hay resultados y mostrarlos
-    //si no hay resultados cargar el formulario vacio
     this.idCargoSelected = event.value;
     this.filtrarListasPorCargo(this.idCargoSelected);
+    // al cambiar el cargo, buscar si hay resultados y mostrarlos
+    //si no hay resultados cargar el formulario vacio
 
+    this.escrutinioService.getResultadoMesaPorCargo(this.mesa_id, event.value)
+      .subscribe((res : ResultadoMesa ) => {
+        let resultado = new ResultadoMesa();
+        if(res){
+          //si existe el resultado de mesa para el cargo
+          //agrego el detalle de los faltantes (rara vez podria venir con faltantes)
+          resultado = Object.assign(new ResultadoMesa, res);
+
+        }else{
+          resultado.mesa_id = this.mesa_id;
+          resultado.cargo_id = this.idCargoSelected;
+          resultado.DetalleResultado = [];
+        }
+        this.agregarDetallesFaltantes(resultado);
+        this.resultadoMesa = resultado;
+      });
 
     console.log('Valor seleccionado:', this.idCargoSelected);
+  }
+
+  agregarDetallesFaltantes(resultadoMesa: ResultadoMesa) {
+    this.listasFiltradas.forEach((lista: ListaElectoral) => {
+      const detalleExistente = resultadoMesa.DetalleResultado.find(detalle => detalle.lista_id === lista.id);
+
+      if (!detalleExistente) {
+        const nuevoDetalle: DetalleResultado = {
+          mesa_id: this.mesa_id, // Asigna el valor adecuado para mesa_id
+          cargo_id: this.idCargoSelected, // Asigna el valor adecuado para cargo_id
+          lista_id: lista.id,
+          listaElectoral: lista,
+          cantidadVotos: 0 // Asigna el valor inicial adecuado para cantidadVotos
+        };
+
+        resultadoMesa.DetalleResultado.push(nuevoDetalle);
+      }
+    });
   }
 
 }

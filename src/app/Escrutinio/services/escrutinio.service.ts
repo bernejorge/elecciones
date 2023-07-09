@@ -52,11 +52,11 @@ export class EscrutinioService {
 
   }
 
-  public getResultadoMesaPorCargo(id_mesa: number, id_cargo: number){
-    const endPoint = this.url + "resultadoMesa";
+  public getResultadoMesaPorCargo(id_mesa: number, id_cargo: number) {
+    const endPoint = this.url + "escrutinio/resultadoMesa";
     let params = new HttpParams();
-    params.set('id_mesa', id_mesa);
-    params.set('id_cargo', id_cargo);
+    params = params.set('id_mesa', id_mesa.toString());
+    params = params.set('id_cargo', id_cargo.toString());
 
     const httpOptions = {
       headers: this.getHttpHeaders(),
@@ -66,8 +66,8 @@ export class EscrutinioService {
     return this.http.get<ResultadoMesa>(endPoint, httpOptions);
   }
 
-  public guardarResultadoMesa(resultado : ResultadoMesa){
-    const endPoint = this.url + "gurdarResultado"
+  public guardarResultadoMesa(resultado: ResultadoMesa) {
+    const endPoint = this.url + "escrutinio/gurdarResultado"
 
     let params = new HttpParams();
     params.set('id_mesa', resultado.mesa_id);
