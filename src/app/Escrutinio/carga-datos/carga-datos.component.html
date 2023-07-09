@@ -1,1 +1,21 @@
-<p>carga-datos works!</p>
+<div class="header">
+  <h2>Escuela: {{mesa.Escuela.nombre}} Mesa Numero: {{ mesa.numeroMesa }}</h2>
+  <mat-form-field>
+    <mat-label>Cargos</mat-label>
+    <mat-select (selectionChange)="onSelectChange($event)">
+      <mat-option *ngFor="let cargo of cargos" [value]="cargo.id">{{ cargo.nombre }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</div>
+
+<div *ngIf="idCargoSelected > 0">
+  <div *ngFor="let lista of listasFiltradas" class="form-field">
+    <mat-form-field  class="form-field">
+      <mat-label>{{ lista.nombre }} - {{lista.Candidato.nombre}}  {{lista.Candidato.apellido}}</mat-label>
+      <input matInput type="number"  />
+    </mat-form-field>
+  </div>
+</div>
+
+

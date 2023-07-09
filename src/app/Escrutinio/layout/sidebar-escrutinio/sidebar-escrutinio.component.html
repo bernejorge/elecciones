@@ -1,15 +1,25 @@
 <mat-sidenav-container class="sidenav-container sidebar-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(isHandset$ | async) === false">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+
+  >
     <mat-toolbar>Menu</mat-toolbar>
     <mat-accordion multi="true">
-      <mat-expansion-panel *ngFor="let escuela of data" class="mat-elevation-z0">
+      <mat-expansion-panel
+        *ngFor="let escuela of data"
+        class="mat-elevation-z0"
+      >
         <mat-expansion-panel-header>
           <mat-panel-title>{{ escuela.nombre }}</mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <mat-list-item *ngFor="let mesa of escuela.MesaElectorals">
-            <a matLine>{{ mesa.numeroMesa }}</a>
+          <mat-list-item *ngFor="let mesa of escuela.MesaElectorals"  matLine (click)="redirectToCarga(mesa.id)">
+            <a>{{ mesa.numeroMesa }}</a>
           </mat-list-item>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -18,12 +28,18 @@
 
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+      >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span class="example-spacer"></span>
       <span>Escrutinio Elecciones 2023</span>
     </mat-toolbar>
     <!-- Contenido adicional aquí -->
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

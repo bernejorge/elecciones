@@ -34,6 +34,16 @@ export class CrudService {
 
   }
 
+  getById<T extends BaseEntity>(entity: T){
+    const endPoint = this.url + entity.endPoint + `/${entity.id}`;
+
+    let httpOptions = {
+      headers: this.getHttpHeaders(),
+    };
+
+    return this.http.get<T>(endPoint, httpOptions);
+  }
+
   getAllEntity<T extends BaseEntity>(entity: T) {
 
     const endPoint = this.url + entity.endPoint;

@@ -1,6 +1,7 @@
 import { BaseEntity } from "./BaseEntity";
 import { Eleccion } from "./Elecciones";
 import { Escuela } from "./Escuela";
+import { ResultadoMesa } from "./ResultadoMesa";
 
 export class MesasElectoral extends BaseEntity{
   numeroMesa!: number;
@@ -10,11 +11,10 @@ export class MesasElectoral extends BaseEntity{
 
   Escuela!: Escuela;
   Eleccion!: Eleccion;
-
+  Resultado!: ResultadoMesa;
 
   constructor(){
     super();
-
   }
 
   override get endPoint(): string {
