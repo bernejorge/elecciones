@@ -1,0 +1,9 @@
+<p>datos works!</p>
+<button type="button" *ngIf="hayNuevosDatos" (click)="refresh()">
+  actualizar
+</button>
+
+
+<div  *ngFor="let item of votos">
+  <p>{{item.name}} = {{item.value}}</p>
+</div>

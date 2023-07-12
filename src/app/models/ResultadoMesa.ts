@@ -11,6 +11,7 @@ export class ResultadoMesa {
   votosNulos!: number;
   votosRecurridos!: number;
   votosImpuganados!: number;
+  total!: number;
   MesaElectoral!: MesasElectoral | undefined;
   Cargo!: Cargo;
   DetalleResultado: DetalleResultado[]=[];
@@ -23,7 +24,7 @@ export class DetalleResultado {
   cargo_id!: number;
   lista_id!: number;
   cantidadVotos: number = 0;
-  listaElectoral! : ListaElectoral;
+  ListaElectoral! : ListaElectoral;
 
 
 }

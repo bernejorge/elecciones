@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EscrutinioService } from '../services/escrutinio.service';
 import { Cargo } from 'src/app/models/Cargo';
 import { ListaElectoral } from 'src/app/models/ListaElectoral';
@@ -10,13 +10,14 @@ import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { DetalleResultado, ResultadoMesa } from 'src/app/models/ResultadoMesa';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-carga-datos',
   templateUrl: './carga-datos.component.html',
   styleUrls: ['./carga-datos.component.css']
 })
-export class CargaDatosComponent implements OnInit {
+export class CargaDatosComponent implements OnInit, OnDestroy {
   cargos: Cargo[] = [];
   listas: ListaElectoral[] = [];
   listasFiltradas: ListaElectoral[] = [];
@@ -25,8 +26,10 @@ export class CargaDatosComponent implements OnInit {
   eleccion_id!: number;
   mesa_id!: number;
   formulario: FormGroup;
-  idCargoSelected : number = 0;
-  resultadoMesa!: ResultadoMesa
+  idCargoSelected: number = 0;
+  resultadoMesa: ResultadoMesa | undefined;
+  navigateSusbcriptions!: Subscription;
+  totalVotos: number = 0;
 
   constructor(private escrutinioService: EscrutinioService, private route: ActivatedRoute,
     private crudService: CrudService, private formBuilder: FormBuilder) {
@@ -34,13 +37,21 @@ export class CargaDatosComponent implements OnInit {
     this.formulario = this.formBuilder.group({});
 
   }
+  ngOnDestroy(): void {
+    this.navigateSusbcriptions.unsubscribe();
+
+  }
 
   ngOnInit() {
     this.route.parent?.params.subscribe(params => {
       this.eleccion_id = params['id_eleccion'];
 
-      this.route.params.subscribe(params => {
+      if (this.navigateSusbcriptions) {
+        this.navigateSusbcriptions.unsubscribe();
+      }
+      this.navigateSusbcriptions = this.route.params.subscribe(params => {
         this.mesa_id = params['id_mesa'];
+        this.resultadoMesa = undefined;
         this.loadMesa();
         this.loadListasElectorales();
       });
@@ -91,26 +102,34 @@ export class CargaDatosComponent implements OnInit {
   }
 
   onSelectChange(event: MatSelectChange) {
-    this.idCargoSelected = event.value;
+    this.idCargoSelected = event.value.id;
     this.filtrarListasPorCargo(this.idCargoSelected);
     // al cambiar el cargo, buscar si hay resultados y mostrarlos
     //si no hay resultados cargar el formulario vacio
 
-    this.escrutinioService.getResultadoMesaPorCargo(this.mesa_id, event.value)
-      .subscribe((res : ResultadoMesa ) => {
+    this.escrutinioService.getResultadoMesaPorCargo(this.mesa_id, this.idCargoSelected)
+      .subscribe((res: ResultadoMesa) => {
         let resultado = new ResultadoMesa();
-        if(res){
+        if (res) {
           //si existe el resultado de mesa para el cargo
           //agrego el detalle de los faltantes (rara vez podria venir con faltantes)
           resultado = Object.assign(new ResultadoMesa, res);
 
-        }else{
+        } else {
           resultado.mesa_id = this.mesa_id;
           resultado.cargo_id = this.idCargoSelected;
+          resultado.total = 0;
+          resultado.votosAfirmativos = 0;
+          resultado.votosBlancos = 0;
+          resultado.votosImpuganados = 0;
+          resultado.votosNulos = 0;
+          resultado.votosRecurridos = 0;
           resultado.DetalleResultado = [];
         }
         this.agregarDetallesFaltantes(resultado);
         this.resultadoMesa = resultado;
+        console.log(resultado);
+        this.actualizarValores();
       });
 
     console.log('Valor seleccionado:', this.idCargoSelected);
@@ -125,13 +144,48 @@ export class CargaDatosComponent implements OnInit {
           mesa_id: this.mesa_id, // Asigna el valor adecuado para mesa_id
           cargo_id: this.idCargoSelected, // Asigna el valor adecuado para cargo_id
           lista_id: lista.id,
-          listaElectoral: lista,
+          ListaElectoral: lista,
           cantidadVotos: 0 // Asigna el valor inicial adecuado para cantidadVotos
         };
 
         resultadoMesa.DetalleResultado.push(nuevoDetalle);
       }
     });
+  }
+
+  actualizarValores() {
+    const rta = this.resultadoMesa?.DetalleResultado.map(i => i.cantidadVotos).reduce(
+      (accum, valor) => {
+        return accum += valor;
+      }
+    )
+    if (this.resultadoMesa) {
+      this.resultadoMesa.votosAfirmativos = rta ? rta : 0;
+      const totalVotos = this.resultadoMesa.votosAfirmativos + this.resultadoMesa.votosBlancos
+        + this.resultadoMesa.votosImpuganados + this.resultadoMesa.votosNulos + this.resultadoMesa.votosRecurridos;
+      this.totalVotos = totalVotos;
+    };
+
+  }
+  guardar() {
+    console.log(this.resultadoMesa);
+    if (this.resultadoMesa)
+      this.escrutinioService.guardarResultadoMesa(this.resultadoMesa).subscribe(
+        {
+          next: (res)=>{
+            console.log(res);
+          },
+          error: (err)=>{
+            console.log(err);
+          }
+        }
+      );
+  }
+
+  validarResultado(): boolean {
+
+
+    return false;
   }
 
 }

@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'escrutinio/:id_eleccion',
     loadChildren:()=>import('./Escrutinio/escrutinio.module').then((m) => m.EscrutinioModule)
+  },
+  {
+    path: 'resultados/:id_eleccion',
+    loadChildren:()=>import('./resultados/resultados.module').then((m) => m.ResultadosModule)
   }
 ];
 
