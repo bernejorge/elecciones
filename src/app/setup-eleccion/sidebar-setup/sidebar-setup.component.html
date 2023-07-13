@@ -1,8 +1,12 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
     <mat-toolbar>Setup Elecciones</mat-toolbar>
     <mat-accordion>
       <mat-expansion-panel class="mat-elevation-z0">
@@ -11,27 +15,31 @@
         </mat-expansion-panel-header>
 
         <mat-nav-list>
-
-          <a mat-list-item routerLink="/setup-elecccion/mesa-electoral">Configurar Mesas Electorales</a>
-          <a mat-list-item routerLink="/setup-elecccion/fiscales-mesas">Configurar Fiscales de Mesas</a>
-          <a mat-list-item routerLink="/setup-elecccion/fiscales-generales">Configurar Fiscales Generales</a>
-          <a mat-list-item routerLink="/setup-elecccion/listas">Configurar Listas Electorales</a>
-
+          <a mat-list-item routerLink="/setup-elecccion/mesa-electoral"
+            >Configurar Mesas Electorales</a
+          >
+          <a mat-list-item routerLink="/setup-elecccion/fiscales-mesas"
+            >Configurar Fiscales de Mesas</a
+          >
+          <a mat-list-item routerLink="/setup-elecccion/fiscales-generales"
+            >Configurar Fiscales Generales</a
+          >
+          <a mat-list-item routerLink="/setup-elecccion/listas"
+            >Configurar Listas Electorales</a
+          >
         </mat-nav-list>
       </mat-expansion-panel>
-
     </mat-accordion>
     <mat-accordion class="app-nav-accordion">
-
       <mat-expansion-panel class="mat-elevation-z0">
         <mat-expansion-panel-header>
-            <mat-panel-title>Consultas de Configuracion</mat-panel-title>
+          <mat-panel-title>Consultas de Configuracion</mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-            <a mat-list-item>Item Three</a>
-            <a mat-list-item>Item Four</a>
+          <a mat-list-item>Item Three</a>
+          <a mat-list-item>Item Four</a>
         </mat-nav-list>
-    </mat-expansion-panel>
+      </mat-expansion-panel>
     </mat-accordion>
   </mat-sidenav>
 
@@ -46,13 +54,9 @@
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span class="example-spacer"></span>
-      <div *ngIf="(setupService.eleccionOb$ | async) as eleccion">
+      <div *ngIf="setupService.eleccionOb$ | async as eleccion">
         <span> Setup - {{ (setupService.eleccionOb$ | async)?.nombre }}</span>
       </div>
-
-
-
-
     </mat-toolbar>
     <router-outlet></router-outlet>
 

@@ -1,0 +1,48 @@
+<div class="header form-grid" *ngIf="mesa">
+  <h2>Escuela: {{ mesa.Escuela.nombre }} Mesa Numero: {{ mesa.numeroMesa }}</h2>
+  <mat-form-field >
+    <mat-label>Cargos</mat-label>
+    <mat-select (selectionChange)="onSelectChange($event)">
+      <mat-option *ngFor="let cargo of cargos" [value]="cargo">{{ cargo.nombre }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div *ngIf="resultadoMesa">
+  <div class="form-grid">
+    <mat-form-field class="form-field">
+      <mat-label class="label-text">Votos Afirmativos</mat-label>
+      <input matInput type="number" [(ngModel)]="resultadoMesa.votosAfirmativos" />
+    </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label class="label-text">Votos Blancos</mat-label>
+      <input (change)="actualizarValores()" matInput type="number" [(ngModel)]="resultadoMesa.votosBlancos" />
+    </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label class="label-text">Votos Nulos</mat-label>
+      <input (change)="actualizarValores()" matInput type="number" [(ngModel)]="resultadoMesa.votosNulos" />
+    </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label class="label-text">Votos Recurridos</mat-label>
+      <input (change)="actualizarValores()" matInput type="number" [(ngModel)]="resultadoMesa.votosRecurridos" />
+    </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label class="label-text">Votos Impugnados</mat-label>
+      <input (change)="actualizarValores()" matInput type="number" [(ngModel)]="resultadoMesa.votosImpuganados" />
+    </mat-form-field>
+    <mat-form-field class="form-field">
+      <mat-label class="label-text">Total</mat-label>
+      <input matInput type="number" [(ngModel)]="totalVotos" />
+    </mat-form-field>
+  </div>
+
+  <div *ngFor="let item of resultadoMesa.DetalleResultado" class="form-field">
+    <mat-form-field class="form-field">
+      <mat-label class="label-text">{{ item.ListaElectoral.nombre }} - {{ item.ListaElectoral.Candidato.nombre }} {{ item.ListaElectoral.Candidato.apellido }}</mat-label>
+      <input (change)="actualizarValores()" matInput type="number" [(ngModel)]="item.cantidadVotos" />
+    </mat-form-field>
+  </div>
+  <button (click)="guardar()" mat-raised-button color="primary">Guardar</button>
+</div>
+
+

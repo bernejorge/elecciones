@@ -21,7 +21,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [],
@@ -48,7 +48,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatCardModule,
     MatIconModule,
     MatExpansionModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatGridListModule
   ]
 })
 export class MaterialModule { }

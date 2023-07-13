@@ -7,7 +7,9 @@
   [ngClass]="{'button-pressed': isButtonPressed}">
   <i class="fa-solid fa-microphone fa-2xl" [ngClass]="{'fa-beat-fade button-pressed': isButtonPressed}"></i>
 </button>
-  <router-outlet></router-outlet>
+  <router-outlet>
+    <app-spinner></app-spinner>
+  </router-outlet>
 
   <!-- Aquí puedes colocar tu pie de página o cualquier otro contenido que desees mostrar en todas las páginas -->
 </div>

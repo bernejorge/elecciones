@@ -1,0 +1,36 @@
+.header {
+  background-color: #4379dd; /* Color celeste de fondo */
+  padding: 10px;
+}
+
+.header h2 {
+  color: #fff; /* Color del texto */
+  margin: 0;
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-gap: 16px;
+}
+
+.form-field {
+  align-self: center;
+  width: 100%;
+}
+
+.label-text {
+  font-size: 16px; /* Ajusta el tamaño de la letra según tus necesidades */
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 10px;
+}
+
