@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ResultadoService } from '../resultados.service';
 import { DetalleResultado } from 'src/app/models/ResultadoMesa';
 import { Subscription } from 'rxjs';
-import { Color, ScaleType } from '@swimlane/ngx-charts';
+import * as Highcharts from 'highcharts';
 
 
 interface VotosPorCargo {
@@ -22,10 +22,26 @@ export class DatosComponent implements OnInit {
   votos: VotosPorCargo[] = [];
   hayNuevosDatos: boolean = false;
 
+  chartOptions: Highcharts.Options = {};
 
   private socketSubscription!: Subscription;
 
   constructor(private router: ActivatedRoute, private resultadoService: ResultadoService) {
+
+    this.chartOptions = {
+      chart: {
+        type: 'pie'
+      },
+      title: {
+        text: 'Gráfico de Votos por Cargo'
+      },
+      series: [{
+        type: 'pie',
+        name: 'Votos',
+        data: this.votos.map(item => [item.name, item.value])
+      }]
+    };
+
 
   }
   ngOnInit(): void {
@@ -69,23 +85,28 @@ export class DatosComponent implements OnInit {
               }
 
               return acumulador;
-            }, []);
+            }, []).sort((a, b) =>b.value - a.value);
 
+            this.chartOptions = {
+              chart: {
+                type: 'pie'
+              },
+              title: {
+                text: 'Gráfico de Votos por Cargo'
+              },
+              series: [{
+                type: 'pie',
+                name: 'Votos',
+                data: this.votos.map(item => [item.name, item.value])
+              }]
+            };
+
+            Highcharts.chart('chartContainer', this.chartOptions);
 
           }
         }
       );
 
   }
-  onSelect(data: any): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
-  }
 
-  onActivate(data: any): void {
-    console.log('Activate', JSON.parse(JSON.stringify(data)));
-  }
-
-  onDeactivate(data:any): void {
-    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
-  }
 }
