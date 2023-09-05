@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "sourceMap": true,
             "outputPath": "dist/elecciones-front",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -81,6 +82,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "sourceMap": true,
             "polyfills": [
               "zone.js",
               "zone.js/testing"
