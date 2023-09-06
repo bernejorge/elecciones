@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { EscrutinioService } from '../services/escrutinio.service';
 import { Cargo } from 'src/app/models/Cargo';
 import { ListaElectoral } from 'src/app/models/ListaElectoral';
@@ -11,6 +11,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { DetalleResultado, ResultadoMesa } from 'src/app/models/ResultadoMesa';
 import { Subscription } from 'rxjs';
+import { FunctionCallingService } from 'src/app/Shared/services/functionCalling.service';
+import { FunctionCall } from 'src/app/models/FunctionInterface';
 
 @Component({
   selector: 'app-carga-datos',
@@ -30,11 +32,16 @@ export class CargaDatosComponent implements OnInit, OnDestroy {
   resultadoMesa: ResultadoMesa | undefined;
   navigateSusbcriptions!: Subscription;
   totalVotos: number = 0;
+  private subscription!: Subscription;
 
-  constructor(private escrutinioService: EscrutinioService, private route: ActivatedRoute,
-    private crudService: CrudService, private formBuilder: FormBuilder) {
+  private funciones: any[] = [];
+
+  constructor(private escrutinioService: EscrutinioService, private route: ActivatedRoute,  private zone: NgZone,
+    private crudService: CrudService, private formBuilder: FormBuilder, private functionCallingService: FunctionCallingService) {
 
     this.formulario = this.formBuilder.group({});
+    const prompt = `You have the following candidates/political parties name:
+    `;
 
   }
   ngOnDestroy(): void {
@@ -55,6 +62,32 @@ export class CargaDatosComponent implements OnInit, OnDestroy {
         this.loadMesa();
         this.loadListasElectorales();
       });
+
+    });
+
+    this.subscription = this.functionCallingService.functionReturned$.subscribe((data: string) => {
+      this.zone.run(() => {
+      if (data.length > 0 && data.includes("name") ) {
+
+        const responseObject = JSON.parse(data);
+        responseObject.arguments =  JSON.parse(responseObject.arguments);
+
+          switch (responseObject.name.trim()) {
+            case 'set_votes':
+              this.cargarResultadoPorVoz(responseObject.arguments );
+              break;
+
+            default:
+              console.log('La función no está definida o no se proporcionó un nombre válido.');
+          }
+
+
+        // Verificar el nombre de la función y ejecutarla con los argumentos correspondientes
+
+        console.log(data);
+
+      }
+    });
 
     });
   }
@@ -131,8 +164,49 @@ export class CargaDatosComponent implements OnInit, OnDestroy {
         console.log(resultado);
         this.actualizarValores();
       });
+    this.armarFunctionsCallings();
+
+    this.functionCallingService.addPromptText(this.armarPromt());
+
 
     console.log('Valor seleccionado:', this.idCargoSelected);
+  }
+
+  armarFunctionsCallings(){
+    this.funciones = [
+      {
+        name: 'set_votes',
+        description: "",
+        parameters: {
+            type: 'object',
+            properties: {
+                votes: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            name: {type: 'string', description: 'Name of candidate, e.g. Juan Manuel'},
+                            id: {type: 'string', description: 'Id of candidate, e.g. 1'},
+                            qty_vote: {type: 'integer', description:'Number of votes, e.g. 100'}
+                        },
+                    }
+                },
+            },
+        }
+      }
+    ];
+    this.functionCallingService.addFunctions( this.funciones);
+  }
+  armarPromt() : string {
+
+    let prompt = `You have the following candidates name / candidate ID number /political parties name/political parties number:`;
+    for (let i = 0; i < this.listasFiltradas.length; i++) {
+      const l = this.listasFiltradas[i];
+      prompt = prompt + "\n" + `${i}. ${l.Candidato.nombre} ${l.Candidato.apellido} / ${l.Candidato.id} / ${l.nombre} /  ${l.numero_lista}`;
+
+    }
+    prompt = prompt + '\n' + 'The goal is set the votes for candidates in the list above.';
+    return prompt;
   }
 
   agregarDetallesFaltantes(resultadoMesa: ResultadoMesa) {
@@ -172,10 +246,10 @@ export class CargaDatosComponent implements OnInit, OnDestroy {
     if (this.resultadoMesa)
       this.escrutinioService.guardarResultadoMesa(this.resultadoMesa).subscribe(
         {
-          next: (res)=>{
+          next: (res) => {
             console.log(res);
           },
-          error: (err)=>{
+          error: (err) => {
             console.log(err);
           }
         }
@@ -187,5 +261,18 @@ export class CargaDatosComponent implements OnInit, OnDestroy {
 
     return false;
   }
+
+  cargarResultadoPorVoz(argumentos : any){
+    argumentos.votes.forEach((c: any)=> {
+      const dr = this.resultadoMesa?.DetalleResultado.find(x=> x.ListaElectoral.Candidato.id == c.id);
+      if(dr){
+        //si encuentro el candidato, modifico el detalle,
+        dr.cantidadVotos = c.qty_vote;
+      }
+
+    });
+    this.actualizarValores();
+  }
+
 
 }
