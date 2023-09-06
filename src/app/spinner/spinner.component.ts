@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { SpinnerService } from '../Shared/services/spinner.service';
 
 @Component({
@@ -6,9 +6,22 @@ import { SpinnerService } from '../Shared/services/spinner.service';
   templateUrl: './spinner.component.html',
   styleUrls: ['./spinner.component.css']
 })
-export class SpinnerComponent {
+export class SpinnerComponent implements OnInit {
 
   public spinnerMostrar$ = this.spinnerService.spinner$;
-  constructor(private spinnerService: SpinnerService) { }
+  mostrar  = false;
+  constructor(private spinnerService: SpinnerService, private changeService: ChangeDetectorRef) {
+
+  }
+  ngOnInit(): void {
+    this.spinnerService.spinner$.subscribe(
+      {
+        next: (res : boolean) => {
+          this.mostrar = res;
+          this.changeService.detectChanges();
+        },
+      }
+    )
+  }
 
 }
