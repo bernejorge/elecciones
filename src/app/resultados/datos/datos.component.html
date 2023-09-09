@@ -1,4 +1,24 @@
-<p>datos works!</p>
+
+<mat-accordion class="example-headers-align">
+  <mat-expansion-panel  (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+
+      </mat-panel-title>
+      <mat-panel-description>
+        {{panelOpenState ? 'Ocultar' : 'Mostrar'}} las bancas obtenidas por sistema Dhont
+        <mat-icon>account_circle</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <p *ngFor="let c of candidatosPorDhont">
+      {{c}}
+    </p>
+  </mat-expansion-panel>
+</mat-accordion>
+
+
 <button type="button" *ngIf="hayNuevosDatos" (click)="refresh()">
   actualizar
 </button>
@@ -6,5 +26,5 @@
 <div id="chartContainer" style="height: 600px;"></div>
 
 <div  *ngFor="let item of votos">
-  <p>{{item.name}} = {{item.value}}</p>
+  <p>{{item.name}} = {{item.votes}}</p>
 </div>

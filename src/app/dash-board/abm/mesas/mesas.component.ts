@@ -4,6 +4,8 @@ import { CrudService } from 'src/app/Shared/services/crud.service';
 import { MesasElectoral } from 'src/app/models/MesaElectoral';
 import { MesasModalComponent } from './mesas-modal/mesas-modal.component';
 import Swal from 'sweetalert2';
+import { SetupService } from 'src/app/Shared/services/setup.service';
+import { Eleccion } from 'src/app/models/Elecciones';
 
 @Component({
   selector: 'app-mesas',
@@ -13,9 +15,10 @@ import Swal from 'sweetalert2';
 export class MesasComponent implements OnInit {
   mesas: MesasElectoral[]= [];
   displayedColumns: string[] = ['numeroMesa', 'escuela', 'eleccion', 'cantidad_votantes', 'acciones'];
+  e: Eleccion | null= null;
 
-  constructor(private ambServices: CrudService, public dialog: MatDialog){
-
+  constructor(private ambServices: CrudService, public dialog: MatDialog, private setupService : SetupService){
+    this.e =  this.setupService.eleccionSeleccionada.getValue();
   }
   ngOnInit(): void {
     this.loadData();
@@ -26,7 +29,8 @@ export class MesasComponent implements OnInit {
 
     this.ambServices.getAllEntity<MesasElectoral>(m).subscribe(
       (res:any[]) => {
-        this.mesas = res.map(x=> Object.assign(new MesasElectoral(), x));
+        const mesas = res.map(x=> Object.assign(new MesasElectoral(), x));
+        this.mesas = mesas.filter((mesa: MesasElectoral) => mesa.Eleccion.id === this.e?.id )
       }
     )
   }

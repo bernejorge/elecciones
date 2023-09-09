@@ -12,7 +12,7 @@ import { MesasElectoral } from 'src/app/models/MesaElectoral';
   providedIn: 'root'
 })
 export class SetupService {
-  private eleccionSeleccionada = new BehaviorSubject<Eleccion | null>(null);
+  public eleccionSeleccionada = new BehaviorSubject<Eleccion | null>(null);
   public eleccionOb$ = this.eleccionSeleccionada.asObservable();
   private eleccion: Eleccion | null = null;
   url: string = "";
