@@ -70,7 +70,12 @@ export class CargaDatosComponent implements OnInit, OnDestroy {
       if (data.length > 0 && data.includes("name") ) {
 
         const responseObject = JSON.parse(data);
-        responseObject.arguments =  JSON.parse(responseObject.arguments);
+        try {
+          responseObject.arguments =  JSON.parse(responseObject.arguments);
+        } catch (error) {
+          console.error(error);
+        }
+
 
           switch (responseObject.name.trim()) {
             case 'set_votes':
@@ -166,7 +171,8 @@ export class CargaDatosComponent implements OnInit, OnDestroy {
       });
     this.armarFunctionsCallings();
 
-    this.functionCallingService.addPromptText(this.armarPromt());
+    //this.functionCallingService.addPromptText(this.armarPromt());
+    this.functionCallingService.addPromptText(this.armarPromtCastellano());
 
 
     console.log('Valor seleccionado:', this.idCargoSelected);
@@ -191,6 +197,22 @@ export class CargaDatosComponent implements OnInit, OnDestroy {
                         },
                     }
                 },
+                blanco: {
+                  type: 'integer',
+                  description: 'Numero de votos en blanco, e.g. 20'
+                },
+                nulos:{
+                  type: 'integer',
+                  description: 'Numero de votos nulos, e.g. 5'
+                },
+                recurridos:{
+                  type: 'integer',
+                  description: 'Numero de votos recurridos, e.g 3'
+                },
+                impugnados:{
+                  type: 'integer',
+                  description: 'Numero de votos impugnados, e.g. 1'
+                }
             },
         }
       }
@@ -206,6 +228,30 @@ export class CargaDatosComponent implements OnInit, OnDestroy {
 
     }
     prompt = prompt + '\n' + 'The goal is set the votes for candidates in the list above.';
+    return prompt;
+  }
+
+  armarPromtCastellano() : string {
+
+    let prompt = `You have the following candidates name with candidate ID number and political parties name with political parties number:`;
+    for (let i = 0; i < this.listasFiltradas.length; i++) {
+      const l = this.listasFiltradas[i];
+      let linea =
+      `{
+        "candidate_name": "${l.Candidato.nombre.replace(/"/g, '')} ${l.Candidato.apellido.replace(/"/g, '')}",
+        "candidate_id": "${l.Candidato.id}",
+        "political_party": "${l.nombre}",
+        "list_number": "${l.numero_lista}"
+      }`;
+      if (i < this.listasFiltradas.length - 1) {
+        linea += ',';
+      }
+      prompt = prompt + "\n" + linea;
+
+    }
+    prompt = prompt + '\n' + `The goal is set the votes for candidates in the list above.
+    If the user try to set vote to a candidate that is not in the list, inform the situation to user.
+    Please you not try to set vote to a candidate that is not in the list`;
     return prompt;
   }
 
@@ -263,14 +309,32 @@ export class CargaDatosComponent implements OnInit, OnDestroy {
   }
 
   cargarResultadoPorVoz(argumentos : any){
-    argumentos.votes.forEach((c: any)=> {
-      const dr = this.resultadoMesa?.DetalleResultado.find(x=> x.ListaElectoral.Candidato.id == c.id);
-      if(dr){
-        //si encuentro el candidato, modifico el detalle,
-        dr.cantidadVotos = c.qty_vote;
-      }
+    if(argumentos.votes){
+      argumentos.votes.forEach((c: any)=> {
+        const dr = this.resultadoMesa?.DetalleResultado.find(x=> x.ListaElectoral.Candidato.id == c.id);
+        if(dr){
+          //si encuentro el candidato, modifico el detalle,
+          dr.cantidadVotos = c.qty_vote;
+        }
 
-    });
+      });
+    }
+
+    if(argumentos.blanco !== undefined && this.resultadoMesa){
+      this.resultadoMesa.votosBlancos = argumentos.blanco;
+    }
+
+    if(argumentos.nulos !== undefined && this.resultadoMesa){
+      this.resultadoMesa.votosNulos = argumentos.nulos;
+    }
+
+    if(argumentos.recurridos !== undefined && this.resultadoMesa){
+      this.resultadoMesa.votosRecurridos = argumentos.recurridos;
+    }
+
+    if(argumentos.impugnados !== undefined && this.resultadoMesa){
+      this.resultadoMesa.votosImpuganados = argumentos.impugnados;
+    }
     this.actualizarValores();
   }
 

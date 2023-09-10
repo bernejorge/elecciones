@@ -38,7 +38,7 @@
 
   <div *ngFor="let item of resultadoMesa.DetalleResultado" class="form-field">
     <mat-form-field class="form-field">
-      <mat-label class="label-text">{{ item.ListaElectoral.nombre }} - {{ item.ListaElectoral.Candidato.nombre }} {{ item.ListaElectoral.Candidato.apellido }}</mat-label>
+      <mat-label class="label-text">{{item.ListaElectoral.numero_lista}} - {{ item.ListaElectoral.nombre }} - {{ item.ListaElectoral.Candidato.nombre }} {{ item.ListaElectoral.Candidato.apellido }}</mat-label>
       <input (change)="actualizarValores()" matInput type="number" [(ngModel)]="item.cantidadVotos" />
     </mat-form-field>
   </div>
